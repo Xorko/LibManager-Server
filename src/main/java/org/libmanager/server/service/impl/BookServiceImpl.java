@@ -74,6 +74,7 @@ public class BookServiceImpl implements BookService {
             if (itemRepository.sumTotalCopies() - book.getTotalCopies() + totalCopies <= 100_000) {
                 // New total_copies value should not be lower than the number of available copies
                 if (book.getTotalCopies() - book.getAvailableCopies() <= totalCopies) {
+                    int oldTotalCopies = book.getTotalCopies();
                     book.setTitle(title);
                     book.setAuthor(author);
                     book.setPublisher(publisher);
@@ -81,7 +82,7 @@ public class BookServiceImpl implements BookService {
                     book.setIsbn(isbn);
                     book.setReleaseDate(DateUtil.parseDB(releaseDate));
                     book.setTotalCopies(totalCopies);
-                    book.setAvailableCopies(book.getAvailableCopies() + (totalCopies - book.getTotalCopies()));
+                    book.setAvailableCopies(book.getAvailableCopies() + (totalCopies - oldTotalCopies));
                     bookRepository.save(book);
                     return new Response<>(Response.Code.OK, true);
                 } else

@@ -71,13 +71,14 @@ public class DVDServiceImpl implements DVDService {
             if (itemRepository.sumTotalCopies() - dvd.getTotalCopies() + totalCopies <= 100_000) {
                 // New total_copies value should not be lower than the number of available copies
                 if (dvd.getTotalCopies() - dvd.getAvailableCopies() <= totalCopies) {
+                    int oldTotalCopies = dvd.getTotalCopies();
                     dvd.setTitle(title);
                     dvd.setAuthor(director);
                     dvd.setDuration(duration);
                     dvd.setGenre(genre.toUpperCase());
                     dvd.setReleaseDate(DateUtil.parseDB(releaseDate));
                     dvd.setTotalCopies(totalCopies);
-                    dvd.setAvailableCopies(dvd.getAvailableCopies() + (totalCopies - dvd.getTotalCopies()));
+                    dvd.setAvailableCopies(dvd.getAvailableCopies() + (totalCopies - oldTotalCopies));
                     dvdRepository.save(dvd);
                     return new Response<>(Response.Code.OK, true);
                 }
