@@ -71,7 +71,7 @@ public class UserServiceImpl implements UserService {
             String birthday,
             String password
     ) {
-        if (userRepository.count() + 1 <= 2000) {
+        if (userRepository.count() + 1 < 2000) {
             User user = new User();
             user.setUsername(username);
             user.setPassword(password);
