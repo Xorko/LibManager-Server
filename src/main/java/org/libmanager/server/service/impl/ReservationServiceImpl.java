@@ -145,7 +145,7 @@ public class ReservationServiceImpl implements ReservationService {
                 return checkDVDReservationLimits(membershipDuration, isAdult, nbBorrowed);
             }
         }
-        return false;
+        return true;
     }
 
     /**
