@@ -39,6 +39,13 @@ public class ReservationController {
         return new Response<>(Response.Code.INVALID_TOKEN, false);
     }
 
+    /**
+     * Delete a reservation
+     * @param token The token of the user (must be admin)
+     * @param id    The id of the reservation to delete
+     * @return      A JSON response with OK code and true if the reservation was successfully deleted, the error and
+     *              false otherwise
+     */
     @PostMapping(path = "/delete/{id}")
     public @ResponseBody
     Response<Boolean> deleteReservation(
@@ -56,7 +63,8 @@ public class ReservationController {
 
     /**
      * Get all reservations
-     * @return  A JSON response with OK code and all reservations
+     * @param token The token of the user (must be admin)
+     * @return      A JSON response with OK code and all reservations
      */
     @PostMapping(path = "/all")
     public @ResponseBody

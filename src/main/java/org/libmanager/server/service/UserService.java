@@ -78,6 +78,7 @@ public class UserService {
      * @param email         The email of the user
      * @param birthday      The birthday of the user
      * @param password      The password of the user
+     * @return              A response with OK code and true if the user was successfully added, error and false otherwise
      */
     public Response<Boolean> add(
             String username,

@@ -21,6 +21,7 @@ public class UserController {
 
     /**
      * Add a user
+     * @param token         The token of the user (must be admin)
      * @param username      The username of the user
      * @param firstName     The firstname of the user
      * @param lastName      The lastname of the user
@@ -51,6 +52,7 @@ public class UserController {
 
     /**
      * Edit a user
+     * @param token         The token of the user (must be admin)
      * @param username      The username of the user
      * @param firstName     The firstname of the user
      * @param lastName      The lastname of the user
@@ -79,7 +81,8 @@ public class UserController {
 
     /**
      * Get all the users
-     * @return A JSON response with OK code and an array with all users
+     * @param token The token of the user (must be admin)
+     * @return      A JSON response with OK code and an array with all users
      */
     @PostMapping(path = "/all")
     public @ResponseBody
@@ -94,6 +97,7 @@ public class UserController {
 
     /**
      * Get a user by its username
+     * @param token     The token of the user (must be admin)
      * @param username  The username of the user to get
      * @return          A JSON response with the user or null if not found
      */
@@ -129,13 +133,15 @@ public class UserController {
 
     /**
      * Search users
-     * @param username      The username of the user
-     * @param firstName     The firstname of the user
-     * @param lastName      The lastname of the user
-     * @param address       The address of the user
-     * @param email         The email of the user
-     * @param birthday      The birthday of the user
-     * @return              All users found in JSON
+     * @param token             The token of the user (must be admin)
+     * @param username          The username of the user
+     * @param firstName         The firstname of the user
+     * @param lastName          The lastname of the user
+     * @param address           The address of the user
+     * @param email             The email of the user
+     * @param birthday          The birthday of the user
+     * @param registrationDate  The registration date of the user
+     * @return                  All users found in JSON
      */
     @PostMapping(path = "/search")
     public @ResponseBody
@@ -167,6 +173,7 @@ public class UserController {
 
     /**
      * Delete a user
+     * @param token     The token of the user (must be admin)
      * @param username  The username of the user to delete
      * @return          A JSON response with success = true if the user was added, false otherwise
      */
