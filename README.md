@@ -6,7 +6,7 @@
 * A SQL database (e.g. MariaDB)
 
 ### Configuration
-* In `src/main/resources`, rename `application.properties.example` as `application.properties` and complete it
+* In `src/main/resources`, rename `application.properties.example` to `application.properties` and complete it
 * Run the server (it will create the tables)
 * Create an admin user by inserting it directly in the database
 
