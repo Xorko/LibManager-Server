@@ -6,7 +6,7 @@
 * A SQL database (e.g. MariaDB)
 
 ### Configuration
-* In `src/main/resources`, copy `application.properties.example` as `application.properties` and complete it
+* In `src/main/resources`, rename `application.properties.example` as `application.properties` and complete it
 
 ### How to run ?
 * Windows: `gradlew.bat bootRun`
