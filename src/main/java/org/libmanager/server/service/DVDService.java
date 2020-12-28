@@ -64,7 +64,7 @@ public interface DVDService {
      * @param author        The author to find
      * @param genre         The genre to find
      * @param releaseDate   The release date to find
-     * @param status        The status to find (should be null to find any status)
+     * @param status        The status to find (should be null to find any status, "0" for unavailable and "1" for available)
      * @return              An iterable object with all found DVDs
      */
     Iterable<DVD> search(

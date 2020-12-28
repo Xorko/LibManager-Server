@@ -35,8 +35,11 @@ public class DVDSpecification implements Specification<DVD> {
         if (filter.getReleaseDate() != null)
             p.getExpressions().add(criteriaBuilder.equal(root.get("releaseDate"), filter.getReleaseDate()));
 
-        if (status != null) {
-            p.getExpressions().add(criteriaBuilder.equal(root.get("status"), Boolean.parseBoolean(status)));
+        if (!status.equals("null")) {
+            if (Integer.parseInt(status) == 0)
+                p.getExpressions().add(criteriaBuilder.equal(root.get("status"), false));
+            if (Integer.parseInt(status) == 1)
+                p.getExpressions().add(criteriaBuilder.equal(root.get("status"), true));
         }
 
         return p;
