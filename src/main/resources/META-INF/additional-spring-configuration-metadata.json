@@ -1,0 +1,8 @@
+{
+  "properties": [
+    {
+      "name": "signaturekey",
+      "type": "java.lang.String",
+      "description": "Signature key for JWT tokens (32 characters long)."
+    }
+  ] }

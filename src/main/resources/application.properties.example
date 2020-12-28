@@ -1,0 +1,26 @@
+# Data source
+spring.jpa.hibernate.ddl-auto=update
+spring.datasource.url=
+spring.datasource.username=
+spring.datasource.password=
+
+# Mail
+spring.mail.host=
+spring.mail.port=
+spring.mail.username=
+spring.mail.password=
+spring.mail.properties.mail.smtp.auth=true
+spring.mail.properties.mail.smtp.connectiontimeout=5000
+spring.mail.properties.mail.smtp.timeout=5000
+spring.mail.properties.mail.smtp.writetimeout=5000
+spring.mail.properties.mail.smtp.starttls.enable=true
+
+# SSL
+server.ssl.key-store=
+server.ssl.key-store-type=
+server.ssl.key-store-password=
+server.ssl.key-password=
+server.ssl.key-alias=
+
+# Signature key (32 characters long)
+signature_key=
