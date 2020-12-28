@@ -86,4 +86,11 @@ public interface UserService {
      */
     boolean delete(String username);
 
+    /**
+     * Check if a username is unique
+     * @param username  The username to check
+     * @return          True if the username is unique, false otherwise
+     */
+    boolean usernameIsAvailable(String username);
+
 }

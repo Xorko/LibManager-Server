@@ -6,6 +6,7 @@ import org.libmanager.server.service.UserService;
 import org.libmanager.server.util.TokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -177,6 +178,17 @@ public class UserController {
             return new Response<>(Response.Code.INSUFFICIENT_PERMISSIONS, false);
         }
         return new Response<>(Response.Code.INVALID_TOKEN, false);
+    }
+
+    /**
+     * Check the availability of a username
+     * @param username  The username to check
+     * @return          A JSON response with OK code and true if the username is available, false otherwise
+     */
+    @GetMapping(path = "/check_username/{username}")
+    public @ResponseBody
+    Response<Boolean> checkUsernameAvailability(@PathVariable String username) {
+        return new Response<>(Response.Code.OK, userService.usernameIsAvailable(username));
     }
 
 }

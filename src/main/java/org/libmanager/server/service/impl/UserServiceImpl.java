@@ -122,4 +122,11 @@ public class UserServiceImpl implements UserService {
         return true;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public boolean usernameIsAvailable(String username) {
+        return get(username) == null;
+    }
+
 }
