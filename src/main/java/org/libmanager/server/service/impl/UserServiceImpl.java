@@ -8,6 +8,7 @@ import org.libmanager.server.repository.UserRepository;
 import org.libmanager.server.service.UserService;
 import org.libmanager.server.specification.UserSpecification;
 import org.libmanager.server.util.DateUtil;
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -74,7 +75,7 @@ public class UserServiceImpl implements UserService {
         if (userRepository.count() + 1 < 2000) {
             User user = new User();
             user.setUsername(username);
-            user.setPassword(password);
+            user.setPassword(BCrypt.hashpw(password, BCrypt.gensalt()));
             user.setFirstName(firstName);
             user.setLastName(lastName);
             user.setAddress(address);

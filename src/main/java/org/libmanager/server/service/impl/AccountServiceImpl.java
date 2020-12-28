@@ -8,6 +8,7 @@ import org.libmanager.server.response.Response;
 import org.libmanager.server.repository.UserRepository;
 import org.libmanager.server.service.AccountService;
 import org.libmanager.server.util.TokenUtil;
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -27,16 +28,19 @@ public class AccountServiceImpl implements AccountService {
      */
     public Response<AuthenticatedUser> login(String username, String password) {
         AuthenticatedUser authenticatedUser = new AuthenticatedUser();
-        Optional<User> foundUser = userRepository.findUserByUsernameAndPassword(username, password);
+        Optional<User> foundUser = userRepository.findById(username);
         if (foundUser.isPresent()) {
             User user = foundUser.get();
-            authenticatedUser.setValid(true);
-            authenticatedUser.setUsername(user.getUsername());
-            authenticatedUser.setToken(TokenUtil.generateToken(user.getUsername(), user.isAdmin()));
-            authenticatedUser.setAdmin(user.isAdmin());
-            return new Response<>(Response.Code.OK, authenticatedUser);
+            if (BCrypt.checkpw(password, user.getPassword())) {
+                authenticatedUser.setValid(true);
+                authenticatedUser.setUsername(user.getUsername());
+                authenticatedUser.setToken(TokenUtil.generateToken(user.getUsername(), user.isAdmin()));
+                authenticatedUser.setAdmin(user.isAdmin());
+                return new Response<>(Response.Code.OK, authenticatedUser);
+            }
+            return new Response<>(Response.Code.INVALID_PASSWORD, authenticatedUser);
         }
-        return new Response<>(Response.Code.ERROR, authenticatedUser);
+        return new Response<>(Response.Code.NOT_FOUND, authenticatedUser);
 
     }
 

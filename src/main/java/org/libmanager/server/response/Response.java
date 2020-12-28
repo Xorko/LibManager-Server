@@ -4,11 +4,11 @@ public class Response<T> {
 
     public enum Code {
         OK,
-        ERROR,
         INVALID_TOKEN,
         INSUFFICIENT_PERMISSIONS,
         NOT_FOUND,
         NOT_AVAILABLE,
+        INVALID_PASSWORD,
         INVALID_TOTAL_COPIES,
         MAX_ITEMS_REACHED,
         MAX_USERS_REACHED,
