@@ -82,7 +82,7 @@ public interface UserService {
     /**
      * Delete a user
      * @param username  The username of the user to delete
-     * @return          A JSON response with success = true if the user was added, false otherwise
+     * @return          True if the user was added, false otherwise
      */
     boolean delete(String username);
 
