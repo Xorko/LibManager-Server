@@ -1,4 +1,4 @@
-package org.libmanager.server.model;
+package org.libmanager.server.response;
 
 /**
  * Used for login responses

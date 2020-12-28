@@ -1,7 +1,7 @@
 package org.libmanager.server.service;
 
 import org.libmanager.server.entity.Book;
-import org.libmanager.server.model.Response;
+import org.libmanager.server.response.Response;
 
 public interface BookService {
 

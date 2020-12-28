@@ -9,7 +9,7 @@ import org.libmanager.server.entity.DVD;
 import org.libmanager.server.entity.Item;
 import org.libmanager.server.entity.Reservation;
 import org.libmanager.server.entity.User;
-import org.libmanager.server.model.Response;
+import org.libmanager.server.response.Response;
 import org.libmanager.server.repository.ItemRepository;
 import org.libmanager.server.repository.ReservationRepository;
 import org.libmanager.server.repository.UserRepository;

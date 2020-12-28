@@ -1,7 +1,7 @@
 package org.libmanager.server.controller;
 
-import org.libmanager.server.model.AuthenticatedUser;
-import org.libmanager.server.model.Response;
+import org.libmanager.server.response.AuthenticatedUser;
+import org.libmanager.server.response.Response;
 import org.libmanager.server.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

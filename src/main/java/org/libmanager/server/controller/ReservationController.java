@@ -1,7 +1,7 @@
 package org.libmanager.server.controller;
 
 import org.libmanager.server.entity.Reservation;
-import org.libmanager.server.model.Response;
+import org.libmanager.server.response.Response;
 import org.libmanager.server.service.ReservationService;
 import org.libmanager.server.util.TokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;

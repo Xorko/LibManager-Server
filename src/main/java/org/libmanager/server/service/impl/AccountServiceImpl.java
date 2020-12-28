@@ -3,8 +3,8 @@ package org.libmanager.server.service.impl;
 import java.util.Optional;
 
 import org.libmanager.server.entity.User;
-import org.libmanager.server.model.AuthenticatedUser;
-import org.libmanager.server.model.Response;
+import org.libmanager.server.response.AuthenticatedUser;
+import org.libmanager.server.response.Response;
 import org.libmanager.server.repository.UserRepository;
 import org.libmanager.server.service.AccountService;
 import org.libmanager.server.util.TokenUtil;

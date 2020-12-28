@@ -3,7 +3,7 @@ package org.libmanager.server.service.impl;
 import java.util.Optional;
 
 import org.libmanager.server.entity.User;
-import org.libmanager.server.model.Response;
+import org.libmanager.server.response.Response;
 import org.libmanager.server.repository.UserRepository;
 import org.libmanager.server.service.UserService;
 import org.libmanager.server.specification.UserSpecification;
