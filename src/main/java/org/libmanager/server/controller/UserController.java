@@ -112,18 +112,6 @@ public class UserController {
                 User foundUser = userService.get(username);
                 if (foundUser == null)
                     return new Response<>(Response.Code.NOT_FOUND, null);
-                /*
-                UserModel userModel = new UserModel(
-                        foundUser.getUsername(),
-                        foundUser.getEmail(),
-                        foundUser.getFirstName(),
-                        foundUser.getLastName(),
-                        foundUser.getAddress(),
-                        foundUser.getBirthday(),
-                        foundUser.getRegistrationDate(),
-                        foundUser.isAdmin()
-                );
-                 */
                 return new Response<>(Response.Code.OK, foundUser);
             }
             return new Response<>(Response.Code.INSUFFICIENT_PERMISSIONS, null);
