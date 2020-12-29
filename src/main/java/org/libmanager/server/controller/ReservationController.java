@@ -108,16 +108,16 @@ public class ReservationController {
             @RequestParam(defaultValue = "0") long id,
             @RequestParam(defaultValue = "null") String username,
             @RequestParam(defaultValue = "null") String title,
-            @RequestParam(defaultValue = "null") String type
+            @RequestParam(defaultValue = "null") String itemType
     ) {
         if (TokenUtil.isValid(token)) {
             if (TokenUtil.isAdmin(token)) {
                 Iterable<Reservation> reservationIterable;
                 // If no argument is given, return all reservations
-                if (id == 0 && username.equals("null") && title.equals("null"))
+                if (id == 0 && username.equals("null") && title.equals("null") && itemType.equals("null"))
                     reservationIterable = reservationService.getAll();
                 else
-                    reservationIterable = reservationService.search(id, username, title, type);
+                    reservationIterable = reservationService.search(id, username, title, itemType);
                 return new Response<>(Response.Code.OK, reservationIterable);
             }
             return new Response<>(Response.Code.INSUFFICIENT_PERMISSIONS, null);

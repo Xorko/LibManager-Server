@@ -11,10 +11,12 @@ import org.springframework.data.jpa.domain.Specification;
 public class ReservationSpecification implements Specification<Reservation> {
 
     private final Reservation filter;
+    private final String type;
 
-    public ReservationSpecification(Reservation filter) {
+    public ReservationSpecification(Reservation filter, String type) {
         super();
         this.filter = filter;
+        this.type = type;
     }
 
     @Override
@@ -27,8 +29,8 @@ public class ReservationSpecification implements Specification<Reservation> {
             p.getExpressions().add(criteriaBuilder.like(root.get("user").get("username"), filter.getUser().getUsername()));
         if (filter.getItem() != null)
             p.getExpressions().add(criteriaBuilder.like(root.get("item").get("title"), filter.getItem().getTitle()));
-        if (filter.getType() != null)
-            p.getExpressions().add(criteriaBuilder.equal(root.get("type"), filter.getType()));
+        if (type != null)
+            p.getExpressions().add(criteriaBuilder.equal(root.get("item").get("itemType"), type));
 
         return p;
     }

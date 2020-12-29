@@ -38,6 +38,10 @@ public abstract class Item implements Serializable {
     @Column(nullable = false)
     private int availableCopies = totalCopies;
 
+    @Column(name = "item_type", insertable = false, updatable = false)
+    @JsonIgnore
+    private String itemType;
+
     @OneToMany(mappedBy = "item")
     private List<Reservation> reservations = new ArrayList<>();
 
@@ -116,10 +120,7 @@ public abstract class Item implements Serializable {
         this.totalCopies = totalCopies;
     }
 
-    @Transient
-    @JsonIgnore
-    public String getDecriminatorValue() {
-        return this.getClass().getAnnotation(DiscriminatorValue.class).value();
+    public String getItemType() {
+        return itemType;
     }
-
 }

@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
@@ -36,7 +37,8 @@ public class Reservation implements Serializable {
     @JsonIdentityReference(alwaysAsId = true)
     private Item item;
 
-    private String type;
+    @Transient
+    private String itemType;
 
     public long getId() {
         return id;
@@ -48,10 +50,6 @@ public class Reservation implements Serializable {
 
     public User getUser() {
         return user;
-    }
-
-    public String getType() {
-        return type;
     }
 
     public void setUser(User user) {
@@ -66,7 +64,8 @@ public class Reservation implements Serializable {
         this.item = item;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public String getItemType() {
+        return item.getItemType();
     }
+
 }

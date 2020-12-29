@@ -9,10 +9,10 @@ import org.libmanager.server.entity.DVD;
 import org.libmanager.server.entity.Item;
 import org.libmanager.server.entity.Reservation;
 import org.libmanager.server.entity.User;
-import org.libmanager.server.response.Response;
 import org.libmanager.server.repository.ItemRepository;
 import org.libmanager.server.repository.ReservationRepository;
 import org.libmanager.server.repository.UserRepository;
+import org.libmanager.server.response.Response;
 import org.libmanager.server.service.ReservationService;
 import org.libmanager.server.specification.ReservationSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +46,6 @@ public class ReservationServiceImpl implements ReservationService {
                     Reservation reservation = new Reservation();
                     reservation.setUser(user);
                     reservation.setItem(item);
-                    reservation.setType(item.getDecriminatorValue());
 
                     // Decrement the number of available copies
                     item.setAvailableCopies(item.getAvailableCopies() - 1);
@@ -101,17 +100,17 @@ public class ReservationServiceImpl implements ReservationService {
      */
     public Iterable<Reservation> search(long id, String username, String title, String type) {
         User user = new User();
-        // Any subclass of Item can be used
-        Item item = new Book();
         user.setUsername('%' + username + '%');
+
+        Item item = new Book();
         item.setTitle('%' + title + '%');
+
         Reservation filter = new Reservation();
         filter.setId(id);
         filter.setItem(item);
         filter.setUser(user);
-        filter.setType(type);
 
-        Specification<Reservation> spec = new ReservationSpecification(filter);
+        Specification<Reservation> spec = new ReservationSpecification(filter, type);
 
         return reservationRepository.findAll(spec);
     }
