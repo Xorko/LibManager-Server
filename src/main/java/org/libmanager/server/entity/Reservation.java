@@ -36,6 +36,8 @@ public class Reservation implements Serializable {
     @JsonIdentityReference(alwaysAsId = true)
     private Item item;
 
+    private String type;
+
     public long getId() {
         return id;
     }
@@ -48,6 +50,10 @@ public class Reservation implements Serializable {
         return user;
     }
 
+    public String getType() {
+        return type;
+    }
+
     public void setUser(User user) {
         this.user = user;
     }
@@ -58,5 +64,9 @@ public class Reservation implements Serializable {
 
     public void setItem(Item item) {
         this.item = item;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

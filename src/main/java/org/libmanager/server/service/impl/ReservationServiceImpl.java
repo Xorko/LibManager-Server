@@ -46,6 +46,7 @@ public class ReservationServiceImpl implements ReservationService {
                     Reservation reservation = new Reservation();
                     reservation.setUser(user);
                     reservation.setItem(item);
+                    reservation.setType(item.getDecriminatorValue());
 
                     // Decrement the number of available copies
                     item.setAvailableCopies(item.getAvailableCopies() - 1);
@@ -98,7 +99,7 @@ public class ReservationServiceImpl implements ReservationService {
     /**
      * {@inheritDoc}
      */
-    public Iterable<Reservation> search(long id, String username, String title) {
+    public Iterable<Reservation> search(long id, String username, String title, String type) {
         User user = new User();
         // Any subclass of Item can be used
         Item item = new Book();
@@ -108,6 +109,7 @@ public class ReservationServiceImpl implements ReservationService {
         filter.setId(id);
         filter.setItem(item);
         filter.setUser(user);
+        filter.setType(type);
 
         Specification<Reservation> spec = new ReservationSpecification(filter);
 

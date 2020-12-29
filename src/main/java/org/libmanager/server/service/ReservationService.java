@@ -40,5 +40,5 @@ public interface ReservationService {
      * @param title     The title to find
      * @return          An iterable object with all found reservations
      */
-    Iterable<Reservation> search(long id, String username, String title);
+    Iterable<Reservation> search(long id, String username, String title, String type);
 }

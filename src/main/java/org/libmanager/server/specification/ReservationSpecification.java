@@ -27,6 +27,8 @@ public class ReservationSpecification implements Specification<Reservation> {
             p.getExpressions().add(criteriaBuilder.like(root.get("user").get("username"), filter.getUser().getUsername()));
         if (filter.getItem() != null)
             p.getExpressions().add(criteriaBuilder.like(root.get("item").get("title"), filter.getItem().getTitle()));
+        if (filter.getType() != null)
+            p.getExpressions().add(criteriaBuilder.equal(root.get("type"), filter.getType()));
 
         return p;
     }
