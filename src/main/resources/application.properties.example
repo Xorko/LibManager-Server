@@ -1,3 +1,5 @@
+spring.jackson.serialization.indent_output=true
+
 # Data source
 spring.jpa.hibernate.ddl-auto=update
 spring.datasource.url=
