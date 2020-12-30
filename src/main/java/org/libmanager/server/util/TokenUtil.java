@@ -99,7 +99,7 @@ public class TokenUtil {
 
         try {
             Jwts.parserBuilder()
-                .require("mail", true)
+                .require("email", true)
                 .setSigningKey(key)
                 .build()
                 .parseClaimsJws(token);
