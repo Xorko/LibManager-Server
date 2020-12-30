@@ -5,6 +5,7 @@ public class Response<T> {
     public enum Code {
         OK,
         INVALID_TOKEN,
+        INVALID_MAIL_TOKEN,
         INSUFFICIENT_PERMISSIONS,
         NOT_FOUND,
         NOT_AVAILABLE,
