@@ -7,6 +7,7 @@ import org.libmanager.server.response.AuthenticatedUser;
 import org.libmanager.server.response.Response;
 import org.libmanager.server.repository.UserRepository;
 import org.libmanager.server.service.AccountService;
+import org.libmanager.server.util.DateUtil;
 import org.libmanager.server.util.TokenUtil;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,8 @@ public class AccountServiceImpl implements AccountService {
                 authenticatedUser.setUsername(user.getUsername());
                 authenticatedUser.setToken(TokenUtil.generateToken(user.getUsername(), user.isAdmin()));
                 authenticatedUser.setAdmin(user.isAdmin());
+                authenticatedUser.setBirthday(DateUtil.format(user.getBirthday()));
+                authenticatedUser.setRegistrationDate(DateUtil.format(user.getRegistrationDate()));
                 return new Response<>(Response.Code.OK, authenticatedUser);
             }
             return new Response<>(Response.Code.INVALID_PASSWORD, authenticatedUser);
@@ -55,14 +58,14 @@ public class AccountServiceImpl implements AccountService {
                     Optional<User> foundUser = userRepository.findById(username);
                     if (foundUser.isPresent()) {
                         User user = foundUser.get();
-                        user.setPassword(password);
+                        user.setPassword(BCrypt.hashpw(password, BCrypt.gensalt()));
                         userRepository.save(user);
                         return new Response<>(Response.Code.OK, Boolean.TRUE);
                     }
                 }
             }
         }
-        return new Response<>(Response.Code.INVALID_TOKEN, Boolean.FALSE);
+        return new Response<>(Response.Code.INVALID_MAIL_TOKEN, Boolean.FALSE);
     }
 
     /**
