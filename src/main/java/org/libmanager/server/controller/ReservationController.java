@@ -101,6 +101,17 @@ public class ReservationController {
         return new Response<>(Response.Code.INVALID_TOKEN, null);
     }
 
+    @PostMapping(path = "/get_user_reservations")
+    public @ResponseBody
+    Response<Iterable<Reservation>> getByUser(
+            @RequestParam String token
+    ) {
+        if (TokenUtil.isValid(token)) {
+            return new Response<>(Response.Code.OK, reservationService.getByUser(TokenUtil.extractUsername(token)));
+        }
+        return new Response<>(Response.Code.INVALID_TOKEN, null);
+    }
+
     @PostMapping(path = "/search")
     public @ResponseBody
     Response<Iterable<Reservation>> search(

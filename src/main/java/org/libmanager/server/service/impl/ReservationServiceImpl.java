@@ -98,6 +98,15 @@ public class ReservationServiceImpl implements ReservationService {
     /**
      * {@inheritDoc}
      */
+    public Iterable<Reservation> getByUser(String username) {
+        Optional<User> foundUser = userRepository.findById(username);
+        return foundUser.map(user -> reservationRepository.findReservationsByUser(user)).orElse(null);
+
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public Iterable<Reservation> search(long id, String username, String title, String type) {
         User user = new User();
         user.setUsername('%' + username + '%');
@@ -130,17 +139,17 @@ public class ReservationServiceImpl implements ReservationService {
             boolean isAdult = ChronoUnit.YEARS.between(user.getBirthday(), LocalDate.now()) >= 12;
             int nbBorrowed = 0;
 
-            if (item instanceof Book) {
+            if (item.getItemType().equals("BOOK")) {
                 // Get the number of books borrowed by the user
                 for (Reservation r : user.getReservations()) {
-                    if (r.getItem() instanceof Book)
+                    if (r.getItemType().equals("BOOK"))
                         nbBorrowed++;
                 }
                 return checkBookReservationLimits(membershipDuration, isAdult, nbBorrowed);
-            } else if (item instanceof DVD) {
+            } else if (item.getItemType().equals("DVD")) {
                 // Get the number of DVDs borrowed by the user
                 for (Reservation r : user.getReservations()) {
-                    if (r.getItem() instanceof DVD)
+                    if (r.getItemType().equals("DVD"))
                         nbBorrowed++;
                 }
                 return checkDVDReservationLimits(membershipDuration, isAdult, nbBorrowed);
@@ -169,9 +178,8 @@ public class ReservationServiceImpl implements ReservationService {
                 return nbBorrowed < 7;
         }
         // Children can borrow up to 5 books
-        else {
+        else
             return nbBorrowed < 5;
-        }
     }
 
     /**
@@ -194,9 +202,8 @@ public class ReservationServiceImpl implements ReservationService {
                 return nbBorrowed < 5;
         }
         // Children can't borrow DVDs
-        else {
+        else
             return false;
-        }
     }
 
 }
