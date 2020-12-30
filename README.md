@@ -3,12 +3,17 @@
 ##### Université de Bretagne-Sud - INF1503 - 2020
 
 ### Required
-* A SQL database (e.g. MariaDB)
+* A SQL database (e.g. MariaDB, JDBC is already declared in build.gradle)
 
 ### Configuration
 * In `src/main/resources`, rename `application.properties.example` to `application.properties` and complete it
-* Run the server (it will create the tables)
-* Create an admin user by inserting it directly in the database
+* Import the database dump
+
+The default credentials for the admin account are:
+* Username: admin
+* Password: admin 
+  
+Please consider changing the password asap
 
 ### How to run ?
 * Windows: `gradlew.bat bootRun`
