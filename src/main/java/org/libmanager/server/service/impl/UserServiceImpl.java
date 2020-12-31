@@ -63,7 +63,7 @@ public class UserServiceImpl implements UserService {
     /**
      * {@inheritDoc}
      */
-    public Response<Boolean> add(
+    public boolean add(
             String username,
             String firstName,
             String lastName,
@@ -82,9 +82,9 @@ public class UserServiceImpl implements UserService {
             user.setEmail(email);
             user.setBirthday(DateUtil.parseDB(birthday));
             userRepository.save(user);
-            return new Response<>(Response.Code.OK, true);
+            return true;
         }
-        return new Response<>(Response.Code.MAX_USERS_REACHED, false);
+        return false;
     }
 
     /**

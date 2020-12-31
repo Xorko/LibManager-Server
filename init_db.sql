@@ -103,7 +103,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES ('admin','admin','','1970-01-01','admin@libmanager.org','admin','admin','$2a$10$H6xIID6r.WMJKAiIKYozyOjMXUUQwbxkozOjGoR4r/X5nZDMsdMHC',NULL);
+INSERT INTO `user` VALUES ('admin','admin','','1970-01-01','admin@libmanager.org','admin','admin','$2a$10$H6xIID6r.WMJKAiIKYozyOjMXUUQwbxkozOjGoR4r/X5nZDMsdMHC',CURDATE());
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

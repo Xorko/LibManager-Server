@@ -44,8 +44,11 @@ public class UserController {
             @RequestParam String birthday,
             @RequestParam String password) {
         if (TokenUtil.isValid(token)) {
-            if (TokenUtil.isAdmin(token))
-                return userService.add(username, firstName, lastName, address, email, birthday, password);
+            if (TokenUtil.isAdmin(token)) {
+                if (userService.add(username, firstName, lastName, address, email, birthday, password))
+                    return new Response<>(Response.Code.OK, true);
+                return new Response<>(Response.Code.MAX_USERS_REACHED, false);
+            }
             return new Response<>(Response.Code.INSUFFICIENT_PERMISSIONS, false);
         }
         return new Response<>(Response.Code.INVALID_TOKEN, false);
@@ -73,9 +76,12 @@ public class UserController {
             @RequestParam String email,
             @RequestParam String birthday) {
         if (TokenUtil.isValid(token)) {
-            if (TokenUtil.isAdmin(token))
-                return new Response<>(Response.Code.OK, userService.edit(username, firstName, lastName, address, email, birthday));
-            return new Response<>(Response.Code.INSUFFICIENT_PERMISSIONS, true);
+            if (TokenUtil.isAdmin(token)) {
+                if (userService.edit(username, firstName, lastName, address, email, birthday))
+                    return new Response<>(Response.Code.OK, true);
+                return new Response<>(Response.Code.NOT_FOUND, false);
+            }
+            return new Response<>(Response.Code.INSUFFICIENT_PERMISSIONS, false);
         }
         return new Response<>(Response.Code.INVALID_TOKEN, false);
     }

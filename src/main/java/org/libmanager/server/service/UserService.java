@@ -27,7 +27,7 @@ public interface UserService {
      * @param email             The email to find
      * @param birthday          The birthday to find
      * @param registrationDate  The registration date to find
-     * @return                  An iterable object with all found users
+     * @return                  An iterable object with all users found
      */
     Iterable<User> search(
             String username,
@@ -48,9 +48,9 @@ public interface UserService {
      * @param email         The email of the user
      * @param birthday      The birthday of the user
      * @param password      The password of the user
-     * @return              A response with OK code and true if the user was successfully added, error and false otherwise
+     * @return              True if the user was successfully added, false otherwise
      */
-    Response<Boolean> add(
+    boolean add(
             String username,
             String firstName,
             String lastName,
