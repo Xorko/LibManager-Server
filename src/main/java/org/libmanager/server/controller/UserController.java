@@ -117,9 +117,9 @@ public class UserController {
         if (TokenUtil.isValid(token)) {
             if (TokenUtil.isAdmin(token)) {
                 User foundUser = userService.get(username);
-                if (foundUser == null)
-                    return new Response<>(Response.Code.NOT_FOUND, null);
-                return new Response<>(Response.Code.OK, foundUser);
+                if (foundUser != null)
+                    return new Response<>(Response.Code.OK, foundUser);
+                return new Response<>(Response.Code.NOT_FOUND, null);
             }
             return new Response<>(Response.Code.INSUFFICIENT_PERMISSIONS, null);
         }
@@ -179,8 +179,11 @@ public class UserController {
             @PathVariable String username
     ) {
         if (TokenUtil.isValid(token)) {
-            if (TokenUtil.isAdmin(token))
-                return new Response<>(Response.Code.OK, userService.delete(username));
+            if (TokenUtil.isAdmin(token)) {
+                if (userService.delete(username))
+                    return new Response<>(Response.Code.OK, true);
+                return new Response<>(Response.Code.NOT_FOUND, false);
+            }
             return new Response<>(Response.Code.INSUFFICIENT_PERMISSIONS, false);
         }
         return new Response<>(Response.Code.INVALID_TOKEN, false);
