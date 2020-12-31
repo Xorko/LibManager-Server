@@ -25,4 +25,4 @@ spring.mail.properties.mail.smtp.starttls.enable=true
 #server.ssl.key-alias=
 
 # Signature key (32 characters long)
-signature_key=
+signaturekey=
