@@ -5,7 +5,6 @@ import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 
 import org.libmanager.server.entity.Book;
-import org.libmanager.server.entity.DVD;
 import org.libmanager.server.entity.Item;
 import org.libmanager.server.entity.Reservation;
 import org.libmanager.server.entity.User;
@@ -98,10 +97,10 @@ public class ReservationServiceImpl implements ReservationService {
     /**
      * {@inheritDoc}
      */
-    public Iterable<Reservation> getByUser(String username) {
+    public Response<Iterable<Reservation>> getByUser(String username) {
         Optional<User> foundUser = userRepository.findById(username);
-        return foundUser.map(user -> reservationRepository.findReservationsByUser(user)).orElse(null);
-
+        return foundUser.map(user -> new Response<>(Response.Code.OK, reservationRepository.findReservationsByUser(user)))
+                        .orElseGet(() -> new Response<>(Response.Code.NOT_FOUND, null));
     }
 
     /**

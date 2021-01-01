@@ -42,7 +42,9 @@ public class AccountController {
     Response<Boolean> passwordResetMail(
             @RequestParam String username
     ) {
-        return accountService.sendResetPasswordMail(username);
+        if (accountService.sendResetPasswordMail(username))
+            return new Response<>(Response.Code.OK, true);
+        return new Response<>(Response.Code.NOT_FOUND, false);
     }
 
     /**
@@ -58,6 +60,8 @@ public class AccountController {
             @RequestParam String token,
             @RequestParam String password
     ) {
-        return accountService.resetPassword(token, password);
+        if (accountService.resetPassword(token, password))
+            return new Response<>(Response.Code.OK, true);
+        return new Response<>(Response.Code.INVALID_MAIL_TOKEN, false);
     }
 }

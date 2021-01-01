@@ -38,7 +38,7 @@ public interface ReservationService {
      * @param username The username of the user
      * @return         All reservations of the user
      */
-    Iterable<Reservation> getByUser(String username);
+    Response<Iterable<Reservation>> getByUser(String username);
 
     /**
      * Search reservations

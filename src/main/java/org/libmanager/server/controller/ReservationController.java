@@ -106,9 +106,8 @@ public class ReservationController {
     Response<Iterable<Reservation>> getByUser(
             @RequestParam String token
     ) {
-        if (TokenUtil.isValid(token)) {
-            return new Response<>(Response.Code.OK, reservationService.getByUser(TokenUtil.extractUsername(token)));
-        }
+        if (TokenUtil.isValid(token))
+            return reservationService.getByUser(TokenUtil.extractUsername(token));
         return new Response<>(Response.Code.INVALID_TOKEN, null);
     }
 

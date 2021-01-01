@@ -50,7 +50,7 @@ public class AccountServiceImpl implements AccountService {
     /**
      * {@inheritDoc}
      */
-    public Response<Boolean> resetPassword(String token, String password) {
+    public boolean resetPassword(String token, String password) {
         if (TokenUtil.isMailToken(token)) {
             if (TokenUtil.isValid(token)) {
                 String username = TokenUtil.extractUsername(token);
@@ -60,18 +60,18 @@ public class AccountServiceImpl implements AccountService {
                         User user = foundUser.get();
                         user.setPassword(BCrypt.hashpw(password, BCrypt.gensalt()));
                         userRepository.save(user);
-                        return new Response<>(Response.Code.OK, Boolean.TRUE);
+                        return true;
                     }
                 }
             }
         }
-        return new Response<>(Response.Code.INVALID_MAIL_TOKEN, Boolean.FALSE);
+        return false;
     }
 
     /**
      * {@inheritDoc}
      */
-    public Response<Boolean> sendResetPasswordMail(String username) {
+    public boolean sendResetPasswordMail(String username) {
         Optional<User> foundUser = userRepository.findById(username);
 
         if (foundUser.isPresent()) {
@@ -83,9 +83,9 @@ public class AccountServiceImpl implements AccountService {
             message.setText("Please enter the following token in the token field: " + TokenUtil.generateMailToken(username));
 
             mailSender.send(message);
-            return new Response<>(Response.Code.OK, true);
+            return true;
         }
-        return new Response<>(Response.Code.NOT_FOUND, false);
+        return false;
     }
 
 }
