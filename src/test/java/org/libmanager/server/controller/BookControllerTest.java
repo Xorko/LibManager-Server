@@ -425,6 +425,15 @@ public class BookControllerTest {
                    .andExpect(jsonPath("$.content[*].releaseDate").exists());
         }
 
+        @Test
+        @DisplayName("Returns not null content when no params are given")
+        public void search_shouldReturnContent_whenNoParamsAreGiven() throws Exception {
+            mockMvc.perform(get(uri))
+                   .andExpect(status().isOk())
+                   .andExpect(jsonPath("$.content").exists())
+                   .andExpect(jsonPath("$.content").isArray());
+        }
+
     }
 
 }

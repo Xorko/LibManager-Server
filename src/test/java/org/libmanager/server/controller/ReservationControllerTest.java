@@ -314,6 +314,24 @@ public class ReservationControllerTest {
             }
 
             @Test
+            @DisplayName("Returns NOT_FOUND if reservation is not found")
+            public void getAll_shouldReturnNotFound_whenReservationIsNotFound() throws Exception {
+                try (MockedStatic<TokenUtil> mockedTokenUtil = mockStatic(TokenUtil.class)) {
+                    mockedTokenUtil.when(() -> TokenUtil.isValid("Foo"))
+                                   .thenReturn(true);
+                    mockedTokenUtil.when(() -> TokenUtil.isAdmin("Foo"))
+                                   .thenReturn(true);
+
+                    when(reservationService.get(1)).thenReturn(null);
+
+                    mockMvc.perform(post(uri, 1)
+                            .param("token", "Foo"))
+                           .andExpect(status().isOk())
+                           .andExpect(jsonPath("$.code").value(Response.Code.NOT_FOUND.toString()));
+                }
+            }
+
+            @Test
             @DisplayName("Returns INSUFFICIENT_PERMISSIONS if token is valid but not admin")
             public void getAll_shouldReturnInsufficientPermissions_whenTokenIsValidAndNotAdmin() throws Exception {
                 try (MockedStatic<TokenUtil> mockedTokenUtil = mockStatic(TokenUtil.class)) {
