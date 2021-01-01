@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collections;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -30,18 +30,19 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class UserControllerTest {
 
     @MockBean
-    UserService userService;
+    private UserService userService;
 
     @Autowired
     private MockMvc mockMvc;
 
     @Nested
-    @DisplayName("UserController_AddUser")
-    class UserController_AddUser {
+    class AddUser {
+
+        private final String uri = "/user/add";
 
         @Test
         @DisplayName("Returns OK if params are correct and token is valid and is admin")
-        public void addUser_shouldReturnOk_ifParamsAreCorrectAndTokenIsValidAndIsAdmin() throws Exception {
+        public void addUser_shouldReturnOk_whenParamsAreCorrectAndTokenIsValidAndIsAdmin() throws Exception {
             try (MockedStatic<TokenUtil> mockedTokenUtil = mockStatic(TokenUtil.class)) {
                 mockedTokenUtil.when(() -> TokenUtil.isValid("Foo"))
                                .thenReturn(true);
@@ -50,7 +51,7 @@ public class UserControllerTest {
 
                 when(userService.add("Foo", "Foo", "Foo", "Foo", "Foo", "1970-01-01", "Foo")).thenReturn(true);
 
-                mockMvc.perform(post("/user/add")
+                mockMvc.perform(post(uri)
                         .param("token", "Foo")
                         .param("username", "Foo")
                         .param("firstName", "Foo")
@@ -66,7 +67,7 @@ public class UserControllerTest {
 
         @Test
         @DisplayName("Returns MAX_USERS_LIMIT if limit is reached")
-        public void addUser_shouldReturnMaxUsersReached_ifCorrectValuesAndLimitReached() throws Exception {
+        public void addUser_shouldReturnMaxUsersReached_whenCorrectParamsAndLimitReached() throws Exception {
             try (MockedStatic<TokenUtil> mockedTokenUtil = mockStatic(TokenUtil.class)) {
                 mockedTokenUtil.when(() -> TokenUtil.isValid("Foo"))
                                .thenReturn(true);
@@ -75,7 +76,7 @@ public class UserControllerTest {
 
                 when(userService.add("Foo", "Foo", "Foo", "Foo", "Foo", "1970-01-01", "Foo")).thenReturn(false);
 
-                mockMvc.perform(post("/user/add")
+                mockMvc.perform(post(uri)
                         .param("token", "Foo")
                         .param("username", "Foo")
                         .param("firstName", "Foo")
@@ -91,12 +92,12 @@ public class UserControllerTest {
 
         @Test
         @DisplayName("Returns INVALID_TOKEN if token is invalid")
-        public void addUser_shouldReturnInvalidToken_ifTokenIsInvalid() throws Exception {
+        public void addUser_shouldReturnInvalidToken_whenTokenIsInvalid() throws Exception {
             try (MockedStatic<TokenUtil> mockedTokenUtil = mockStatic(TokenUtil.class)) {
                 mockedTokenUtil.when(() -> TokenUtil.isValid("Foo"))
                                .thenReturn(false);
 
-                mockMvc.perform(post("/user/add")
+                mockMvc.perform(post(uri)
                         .param("token", "Foo")
                         .param("username", "Foo")
                         .param("firstName", "Foo")
@@ -112,14 +113,14 @@ public class UserControllerTest {
 
         @Test
         @DisplayName("Returns INSUFFICIENT_PERMISSIONS if token is not an admin token")
-        public void addUser_shouldReturnInsufficientPermissions_IfTokenIsNotAdminToken() throws Exception {
+        public void addUser_shouldReturnInsufficientPermissions_whenTokenIsNotAdminToken() throws Exception {
             try (MockedStatic<TokenUtil> mockedTokenUtil = mockStatic(TokenUtil.class)) {
                 mockedTokenUtil.when(() -> TokenUtil.isValid("Foo"))
                                .thenReturn(true);
                 mockedTokenUtil.when(() -> TokenUtil.isAdmin("Foo"))
                                .thenReturn(false);
 
-                mockMvc.perform(post("/user/add")
+                mockMvc.perform(post(uri)
                         .param("token", "Foo")
                         .param("username", "Foo")
                         .param("firstName", "Foo")
@@ -136,12 +137,13 @@ public class UserControllerTest {
     }
 
     @Nested
-    @DisplayName("UserController_EditUser")
-    class UserController_EditUser {
+    class EditUser {
+
+        private final String uri = "/user/edit/{username}";
 
         @Test
         @DisplayName("Returns OK if params are correct and token is valid and is admin")
-        public void editUser_shouldReturnOk_ifCorrectParamsAndTokenIsValidAndIsAdmin() throws Exception {
+        public void editUser_shouldReturnOk_whenCorrectParamsAndTokenIsValidAndIsAdmin() throws Exception {
             try (MockedStatic<TokenUtil> mockedTokenUtil = mockStatic(TokenUtil.class)) {
                 mockedTokenUtil.when(() -> TokenUtil.isValid("Foo"))
                                .thenReturn(true);
@@ -150,7 +152,7 @@ public class UserControllerTest {
 
                 when(userService.edit("Foo", "Foo", "Foo", "Foo", "Foo", "1970-01-01")).thenReturn(true);
 
-                mockMvc.perform(post("/user/edit/{username}", "Foo")
+                mockMvc.perform(post(uri, "Foo")
                         .param("token", "Foo")
                         .param("username", "Foo")
                         .param("firstName", "Foo")
@@ -166,7 +168,7 @@ public class UserControllerTest {
 
         @Test
         @DisplayName("Returns NOT_FOUND if unknown username")
-        public void editUser_shouldReturnNotFound_ifUnknownUsername() throws Exception {
+        public void editUser_shouldReturnNotFound_whenUnknownUsername() throws Exception {
             try (MockedStatic<TokenUtil> mockedTokenUtil = mockStatic(TokenUtil.class)) {
                 mockedTokenUtil.when(() -> TokenUtil.isValid("Foo"))
                                .thenReturn(true);
@@ -175,7 +177,7 @@ public class UserControllerTest {
 
                 when(userService.edit("Foo", "Foo", "Foo", "Foo", "Foo", "1970-01-01")).thenReturn(false);
 
-                mockMvc.perform(post("/user/edit/{username}", "Foo")
+                mockMvc.perform(post(uri, "Foo")
                         .param("token", "Foo")
                         .param("username", "Foo")
                         .param("firstName", "Foo")
@@ -191,12 +193,12 @@ public class UserControllerTest {
 
         @Test
         @DisplayName("Returns INVALID_TOKEN if token is invalid")
-        public void editUser_shouldReturnInvalidToken_ifTokenIsInvalid() throws Exception {
+        public void editUser_shouldReturnInvalidToken_whenTokenIsInvalid() throws Exception {
             try (MockedStatic<TokenUtil> mockedTokenUtil = mockStatic(TokenUtil.class)) {
                 mockedTokenUtil.when(() -> TokenUtil.isValid("Foo"))
                                .thenReturn(false);
 
-                mockMvc.perform(post("/user/edit/{username}", "Foo")
+                mockMvc.perform(post(uri, "Foo")
                         .param("token", "Foo")
                         .param("firstName", "Foo")
                         .param("lastName", "Foo")
@@ -211,14 +213,14 @@ public class UserControllerTest {
 
         @Test
         @DisplayName("Returns INSUFFICIENT_PERMISSIONS if token is not an admin token")
-        public void editUser_shouldReturnInsufficientPermissions_IfTokenIsNotAdminToken() throws Exception {
+        public void editUser_shouldReturnInsufficientPermissions_whenTokenIsNotAdminToken() throws Exception {
             try (MockedStatic<TokenUtil> mockedTokenUtil = mockStatic(TokenUtil.class)) {
                 mockedTokenUtil.when(() -> TokenUtil.isValid("Foo"))
                                .thenReturn(true);
                 mockedTokenUtil.when(() -> TokenUtil.isAdmin("Foo"))
                                .thenReturn(false);
 
-                mockMvc.perform(post("/user/edit/{username}", "Foo")
+                mockMvc.perform(post(uri, "Foo")
                         .param("token", "Foo")
                         .param("firstName", "Foo")
                         .param("lastName", "Foo")
@@ -235,12 +237,13 @@ public class UserControllerTest {
 
 
     @Nested
-    @DisplayName("UserController_DeleteUser")
-    class UserController_DeleteUser {
+    class DeleteUser {
+
+        private final String uri = "/user/delete/{username}";
 
         @Test
         @DisplayName("Returns OK if params are correct and token is valid and is admin")
-        public void deleteUser_shouldReturnOk_ifCorrectParamsAndTokenIsValidAndIsAdmin() throws Exception {
+        public void deleteUser_shouldReturnOk_whenCorrectParamsAndTokenIsValidAndIsAdmin() throws Exception {
             try (MockedStatic<TokenUtil> mockedTokenUtil = mockStatic(TokenUtil.class)) {
                 mockedTokenUtil.when(() -> TokenUtil.isValid("Foo"))
                                .thenReturn(true);
@@ -249,7 +252,7 @@ public class UserControllerTest {
 
                 when(userService.delete("Foo")).thenReturn(true);
 
-                mockMvc.perform(post("/user/delete/{username}", "Foo")
+                mockMvc.perform(post(uri, "Foo")
                         .param("token", "Foo"))
                        .andExpect(status().isOk())
                        .andExpect(jsonPath("$.code").value(Response.Code.OK.toString()));
@@ -258,7 +261,7 @@ public class UserControllerTest {
 
         @Test
         @DisplayName("Returns NOT_FOUND if unknown username")
-        public void deleteUser_shouldReturnNotFound_ifUnknownUsername() throws Exception {
+        public void deleteUser_shouldReturnNotFound_whenUnknownUsername() throws Exception {
             try (MockedStatic<TokenUtil> mockedTokenUtil = mockStatic(TokenUtil.class)) {
                 mockedTokenUtil.when(() -> TokenUtil.isValid("Foo"))
                                .thenReturn(true);
@@ -267,7 +270,7 @@ public class UserControllerTest {
 
                 when(userService.delete("Foo")).thenReturn(false);
 
-                mockMvc.perform(post("/user/delete/{username}", "Foo")
+                mockMvc.perform(post(uri, "Foo")
                         .param("token", "Foo"))
                        .andExpect(status().isOk())
                        .andExpect(jsonPath("$.code").value(Response.Code.NOT_FOUND.toString()));
@@ -276,12 +279,12 @@ public class UserControllerTest {
 
         @Test
         @DisplayName("Returns INVALID_TOKEN if token is invalid")
-        public void deleteUser_shouldReturnInvalidToken_ifTokenIsInvalid() throws Exception {
+        public void deleteUser_shouldReturnInvalidToken_whenTokenIsInvalid() throws Exception {
             try (MockedStatic<TokenUtil> mockedTokenUtil = mockStatic(TokenUtil.class)) {
                 mockedTokenUtil.when(() -> TokenUtil.isValid("Foo"))
                                .thenReturn(false);
 
-                mockMvc.perform(post("/user/delete/{username}", "Foo")
+                mockMvc.perform(post(uri, "Foo")
                         .param("token", "Foo"))
                        .andExpect(status().isOk())
                        .andExpect(jsonPath("$.code").value(Response.Code.INVALID_TOKEN.toString()));
@@ -290,14 +293,14 @@ public class UserControllerTest {
 
         @Test
         @DisplayName("Returns INSUFFICIENT_PERMISSIONS if token is not an admin token")
-        public void deleteUser_shouldReturnInsufficientPermissions_IfTokenIsNotAdminToken() throws Exception {
+        public void deleteUser_shouldReturnInsufficientPermissions_whenTokenIsNotAdminToken() throws Exception {
             try (MockedStatic<TokenUtil> mockedTokenUtil = mockStatic(TokenUtil.class)) {
                 mockedTokenUtil.when(() -> TokenUtil.isValid("Foo"))
                                .thenReturn(true);
                 mockedTokenUtil.when(() -> TokenUtil.isAdmin("Foo"))
                                .thenReturn(false);
 
-                mockMvc.perform(post("/user/delete/{username}", "Foo")
+                mockMvc.perform(post(uri, "Foo")
                         .param("token", "Foo"))
                        .andExpect(status().isOk())
                        .andExpect(jsonPath("$.code").value(Response.Code.INSUFFICIENT_PERMISSIONS.toString()));
@@ -307,12 +310,13 @@ public class UserControllerTest {
     }
 
     @Nested
-    @DisplayName("UserController_GetUsers")
-    class UserController_GetUsers {
+    class Getters {
+
+        private User user;
 
         @BeforeEach
         public void init() {
-            User user = new User();
+            user = new User();
             user.setAdmin(false);
             user.setUsername("Foo");
             user.setFirstName("Foo");
@@ -322,235 +326,248 @@ public class UserControllerTest {
             user.setAddress("Foo");
             user.setBirthday(LocalDate.EPOCH);
             user.setRegistrationDate(LocalDate.EPOCH);
-
-            Iterable<User> userIterable = Arrays.asList(user, user, user);
-
-            when(userService.get("Foo")).thenReturn(user);
-            when(userService.get("Bar")).thenReturn(null);
-            when(userService.getAll()).thenReturn(userIterable);
         }
 
-        @Test
-        @DisplayName("GetUser returns OK if token is valid and is an admin token")
-        public void getUser_shouldReturnOK_ifCorrectParamsAndTokenIsValidAndIsAdmin() throws Exception {
-            try (MockedStatic<TokenUtil> mockedTokenUtil = mockStatic(TokenUtil.class)) {
-                mockedTokenUtil.when(() -> TokenUtil.isValid("Foo"))
-                               .thenReturn(true);
-                mockedTokenUtil.when(() -> TokenUtil.isAdmin("Foo"))
-                               .thenReturn(true);
+        @Nested
+        class GetUser {
 
-                mockMvc.perform(post("/user/get/{username}", "Foo")
-                        .param("token", "Foo"))
-                       .andExpect(status().isOk())
-                       .andExpect(jsonPath("$.code").value(Response.Code.OK.toString()));
+            private final String uri = "/user/get/{username}";
+
+            @BeforeEach
+            public void init() {
+                when(userService.get("Foo")).thenReturn(user);
+                when(userService.get("Bar")).thenReturn(null);
             }
+
+            @Test
+            @DisplayName("Returns OK if token is valid and is an admin token")
+            public void getUser_shouldReturnOK_whenCorrectParamsAndTokenIsValidAndIsAdmin() throws Exception {
+                try (MockedStatic<TokenUtil> mockedTokenUtil = mockStatic(TokenUtil.class)) {
+                    mockedTokenUtil.when(() -> TokenUtil.isValid("Foo"))
+                                   .thenReturn(true);
+                    mockedTokenUtil.when(() -> TokenUtil.isAdmin("Foo"))
+                                   .thenReturn(true);
+
+                    mockMvc.perform(post(uri, "Foo")
+                            .param("token", "Foo"))
+                           .andExpect(status().isOk())
+                           .andExpect(jsonPath("$.code").value(Response.Code.OK.toString()));
+                }
+            }
+
+            @Test
+            @DisplayName("Returns INVALID_TOKEN if token is invalid")
+            public void getUser_shouldReturnInvalidToken_whenTokenIsInvalid() throws Exception {
+                try (MockedStatic<TokenUtil> mockedTokenUtil = mockStatic(TokenUtil.class)) {
+                    mockedTokenUtil.when(() -> TokenUtil.isValid("Foo"))
+                                   .thenReturn(false);
+
+                    mockMvc.perform(post(uri, "Foo")
+                            .param("token", "Foo"))
+                           .andExpect(status().isOk())
+                           .andExpect(jsonPath("$.code").value(Response.Code.INVALID_TOKEN.toString()));
+                }
+            }
+
+            @Test
+            @DisplayName("Returns INSUFFICIENT_PERMISSIONS if token is not an admin token")
+            public void getUser_shouldReturnInsufficientPermissions_whenTokenIsNotAdminToken() throws Exception {
+                try (MockedStatic<TokenUtil> mockedTokenUtil = mockStatic(TokenUtil.class)) {
+                    mockedTokenUtil.when(() -> TokenUtil.isValid("Foo"))
+                                   .thenReturn(true);
+                    mockedTokenUtil.when(() -> TokenUtil.isAdmin("Foo"))
+                                   .thenReturn(false);
+
+                    mockMvc.perform(post(uri, "Foo")
+                            .param("token", "Foo"))
+                           .andExpect(status().isOk())
+                           .andExpect(jsonPath("$.code").value(Response.Code.INSUFFICIENT_PERMISSIONS.toString()));
+                }
+            }
+
+            @Test
+            @DisplayName("Returns the user")
+            public void getUser_shouldReturnUser() throws Exception {
+                try (MockedStatic<TokenUtil> mockedTokenUtil = mockStatic(TokenUtil.class)) {
+                    mockedTokenUtil.when(() -> TokenUtil.isValid("Foo"))
+                                   .thenReturn(true);
+                    mockedTokenUtil.when(() -> TokenUtil.isAdmin("Foo"))
+                                   .thenReturn(true);
+
+                    mockMvc.perform(post(uri, "Foo")
+                            .param("token", "Foo"))
+                           .andExpect(status().isOk())
+                           .andExpect(jsonPath("$.content").isNotEmpty())
+                           .andExpect(jsonPath("$.content.username").exists())
+                           .andExpect(jsonPath("$.content.firstName").exists())
+                           .andExpect(jsonPath("$.content.lastName").exists())
+                           .andExpect(jsonPath("$.content.email").exists())
+                           .andExpect(jsonPath("$.content.birthday").exists())
+                           .andExpect(jsonPath("$.content.registrationDate").exists())
+                           .andExpect(jsonPath("$.content.admin").exists());
+                }
+            }
+
+            @Test
+            @DisplayName("Returns NOT_FOUND if not found")
+            public void getUser_shouldReturnNotFound_whenNotFound() throws Exception {
+                try (MockedStatic<TokenUtil> mockedTokenUtil = mockStatic(TokenUtil.class)) {
+                    mockedTokenUtil.when(() -> TokenUtil.isValid("Foo"))
+                                   .thenReturn(true);
+                    mockedTokenUtil.when(() -> TokenUtil.isAdmin("Foo"))
+                                   .thenReturn(true);
+
+                    mockMvc.perform(post(uri, "Bar")
+                            .param("token", "Foo"))
+                           .andExpect(status().isOk())
+                           .andExpect(jsonPath("$.code").value(Response.Code.NOT_FOUND.toString()));
+                }
+            }
+
+            @Test
+            @DisplayName("Content should be null if not found")
+            public void getUserContent_shouldBeNull_whenNotFound() throws Exception {
+                try (MockedStatic<TokenUtil> mockedTokenUtil = mockStatic(TokenUtil.class)) {
+                    mockedTokenUtil.when(() -> TokenUtil.isValid("Foo"))
+                                   .thenReturn(true);
+                    mockedTokenUtil.when(() -> TokenUtil.isAdmin("Foo"))
+                                   .thenReturn(true);
+
+                    mockMvc.perform(post(uri, "Bar")
+                            .param("token", "Foo"))
+                           .andExpect(status().isOk())
+                           .andExpect(jsonPath("$.content").isEmpty())
+                           .andExpect(jsonPath("$.content.username").doesNotExist())
+                           .andExpect(jsonPath("$.content.firstName").doesNotExist())
+                           .andExpect(jsonPath("$.content.lastName").doesNotExist())
+                           .andExpect(jsonPath("$.content.email").doesNotExist())
+                           .andExpect(jsonPath("$.content.birthday").doesNotExist())
+                           .andExpect(jsonPath("$.content.registrationDate").doesNotExist())
+                           .andExpect(jsonPath("$.content.admin").doesNotExist());
+                }
+            }
+
         }
 
-        @Test
-        @DisplayName("GetUser returns INVALID_TOKEN if token is invalid")
-        public void getUser_shouldReturnInvalidToken_IfTokenIsInvalid() throws Exception {
-            try (MockedStatic<TokenUtil> mockedTokenUtil = mockStatic(TokenUtil.class)) {
-                mockedTokenUtil.when(() -> TokenUtil.isValid("Foo"))
-                               .thenReturn(false);
+        @Nested
+        class GetAllUsers {
 
-                mockMvc.perform(post("/user/get/{username}", "Foo")
-                        .param("token", "Foo"))
-                       .andExpect(status().isOk())
-                       .andExpect(jsonPath("$.code").value(Response.Code.INVALID_TOKEN.toString()));
+            private final String uri = "/user/all";
+
+            @BeforeEach
+            public void init() {
+                Iterable<User> userIterable = Arrays.asList(user, user, user);
+                when(userService.getAll()).thenReturn(userIterable);
             }
-        }
 
-        @Test
-        @DisplayName("GetUser returns INSUFFICIENT_PERMISSIONS if token is not an admin token")
-        public void getUser_shouldReturnInsufficientPermissions_IfTokenIsNotAdminToken() throws Exception {
-            try (MockedStatic<TokenUtil> mockedTokenUtil = mockStatic(TokenUtil.class)) {
-                mockedTokenUtil.when(() -> TokenUtil.isValid("Foo"))
-                               .thenReturn(true);
-                mockedTokenUtil.when(() -> TokenUtil.isAdmin("Foo"))
-                               .thenReturn(false);
+            @Test
+            @DisplayName("Returns OK if token is valid and is an admin token")
+            public void getAllUsers_shouldReturnOk_whenCorrectParamsAndTokenIsValidAndIsAdmin() throws Exception {
+                try (MockedStatic<TokenUtil> mockedTokenUtil = mockStatic(TokenUtil.class)) {
+                    mockedTokenUtil.when(() -> TokenUtil.isValid("Foo"))
+                                   .thenReturn(true);
+                    mockedTokenUtil.when(() -> TokenUtil.isAdmin("Foo"))
+                                   .thenReturn(true);
 
-                mockMvc.perform(post("/user/get/{username}", "Foo")
-                        .param("token", "Foo"))
-                       .andExpect(status().isOk())
-                       .andExpect(jsonPath("$.code").value(Response.Code.INSUFFICIENT_PERMISSIONS.toString()));
+                    mockMvc.perform(post(uri)
+                            .param("token", "Foo"))
+                           .andExpect(status().isOk())
+                           .andExpect(jsonPath("$.code").value(Response.Code.OK.toString()));
+                }
             }
-        }
 
-        @Test
-        @DisplayName("GetUser returns the user")
-        public void getUser_shouldReturnUser() throws Exception {
-            try (MockedStatic<TokenUtil> mockedTokenUtil = mockStatic(TokenUtil.class)) {
-                mockedTokenUtil.when(() -> TokenUtil.isValid("Foo"))
-                               .thenReturn(true);
-                mockedTokenUtil.when(() -> TokenUtil.isAdmin("Foo"))
-                               .thenReturn(true);
+            @Test
+            @DisplayName("Returns INVALID_TOKEN if token is invalid")
+            public void getAllUsers_shouldReturnInvalidToken_whenTokenIsInvalid() throws Exception {
+                try (MockedStatic<TokenUtil> mockedTokenUtil = mockStatic(TokenUtil.class)) {
+                    mockedTokenUtil.when(() -> TokenUtil.isValid("Foo"))
+                                   .thenReturn(false);
 
-                mockMvc.perform(post("/user/get/{username}", "Foo")
-                        .param("token", "Foo"))
-                       .andExpect(status().isOk())
-                       .andExpect(jsonPath("$.content").isNotEmpty())
-                       .andExpect(jsonPath("$.content.username").exists())
-                       .andExpect(jsonPath("$.content.firstName").exists())
-                       .andExpect(jsonPath("$.content.lastName").exists())
-                       .andExpect(jsonPath("$.content.email").exists())
-                       .andExpect(jsonPath("$.content.birthday").exists())
-                       .andExpect(jsonPath("$.content.registrationDate").exists())
-                       .andExpect(jsonPath("$.content.admin").exists());
+                    mockMvc.perform(post(uri)
+                            .param("token", "Foo"))
+                           .andExpect(status().isOk())
+                           .andExpect(jsonPath("$.code").value(Response.Code.INVALID_TOKEN.toString()));
+                }
             }
-        }
 
-        @Test
-        @DisplayName("GetUser returns NOT_FOUND if not found")
-        public void getUser_shouldReturnNotFound_ifNotFound() throws Exception {
-            try (MockedStatic<TokenUtil> mockedTokenUtil = mockStatic(TokenUtil.class)) {
-                mockedTokenUtil.when(() -> TokenUtil.isValid("Foo"))
-                               .thenReturn(true);
-                mockedTokenUtil.when(() -> TokenUtil.isAdmin("Foo"))
-                               .thenReturn(true);
+            @Test
+            @DisplayName("Doesn't return the user list if token is invalid token")
+            public void getAllUsers_shouldNotReturnUserList_whenTokenIsInvalid() throws Exception {
+                try (MockedStatic<TokenUtil> mockedTokenUtil = mockStatic(TokenUtil.class)) {
+                    mockedTokenUtil.when(() -> TokenUtil.isValid("Foo"))
+                                   .thenReturn(false);
 
-                mockMvc.perform(post("/user/get/{username}", "Bar")
-                        .param("token", "Foo"))
-                       .andExpect(status().isOk())
-                       .andExpect(jsonPath("$.code").value(Response.Code.NOT_FOUND.toString()));
+                    mockMvc.perform(post(uri)
+                            .param("token", "Foo"))
+                           .andExpect(status().isOk())
+                           .andExpect(jsonPath("$.content").isEmpty());
+                }
             }
-        }
 
-        @Test
-        @DisplayName("GetUser returns null if not found")
-        public void getUser_shouldReturnNull_IfNotFound() throws Exception {
-            try (MockedStatic<TokenUtil> mockedTokenUtil = mockStatic(TokenUtil.class)) {
-                mockedTokenUtil.when(() -> TokenUtil.isValid("Foo"))
-                               .thenReturn(true);
-                mockedTokenUtil.when(() -> TokenUtil.isAdmin("Foo"))
-                               .thenReturn(true);
+            @Test
+            @DisplayName("Returns INSUFFICIENT_PERMISSIONS if token is not an admin token")
+            public void getAllUsers_shouldNotReturnUserList_whenTokenIsNotAdminToken() throws Exception {
+                try (MockedStatic<TokenUtil> mockedTokenUtil = mockStatic(TokenUtil.class)) {
+                    mockedTokenUtil.when(() -> TokenUtil.isValid("Foo"))
+                                   .thenReturn(true);
+                    mockedTokenUtil.when(() -> TokenUtil.isAdmin("Foo"))
+                                   .thenReturn(false);
 
-                mockMvc.perform(post("/user/get/{username}", "Bar")
-                        .param("token", "Foo"))
-                       .andExpect(status().isOk())
-                       .andExpect(jsonPath("$.content").isEmpty())
-                       .andExpect(jsonPath("$.content.username").doesNotExist())
-                       .andExpect(jsonPath("$.content.firstName").doesNotExist())
-                       .andExpect(jsonPath("$.content.lastName").doesNotExist())
-                       .andExpect(jsonPath("$.content.email").doesNotExist())
-                       .andExpect(jsonPath("$.content.birthday").doesNotExist())
-                       .andExpect(jsonPath("$.content.registrationDate").doesNotExist())
-                       .andExpect(jsonPath("$.content.admin").doesNotExist());
+                    mockMvc.perform(post(uri, "Foo")
+                            .param("token", "Foo"))
+                           .andExpect(status().isOk())
+                           .andExpect(jsonPath("$.content").isEmpty());
+                }
             }
-        }
 
-        @Test
-        @DisplayName("GetAllUsers returns OK if token is valid and is an admin token")
-        public void getAllUsers_shouldReturnOk_ifCorrectParamsAndTokenIsValidAndIsAdmin() throws Exception {
-            try (MockedStatic<TokenUtil> mockedTokenUtil = mockStatic(TokenUtil.class)) {
-                mockedTokenUtil.when(() -> TokenUtil.isValid("Foo"))
-                               .thenReturn(true);
-                mockedTokenUtil.when(() -> TokenUtil.isAdmin("Foo"))
-                               .thenReturn(true);
+            @Test
+            @DisplayName("Doesn't return the user list if token is not an admin token")
+            public void getAllUsers_shouldReturnInsufficientPermissions_whenTokenIsNotAdminToken() throws Exception {
+                try (MockedStatic<TokenUtil> mockedTokenUtil = mockStatic(TokenUtil.class)) {
+                    mockedTokenUtil.when(() -> TokenUtil.isValid("Foo"))
+                                   .thenReturn(true);
+                    mockedTokenUtil.when(() -> TokenUtil.isAdmin("Foo"))
+                                   .thenReturn(false);
 
-                mockMvc.perform(post("/user/all")
-                        .param("token", "Foo"))
-                       .andExpect(status().isOk())
-                       .andExpect(jsonPath("$.code").value(Response.Code.OK.toString()));
+                    mockMvc.perform(post(uri, "Foo")
+                            .param("token", "Foo"))
+                           .andExpect(status().isOk())
+                           .andExpect(jsonPath("$.code").value(Response.Code.INSUFFICIENT_PERMISSIONS.toString()));
+                }
             }
-        }
 
-        @Test
-        @DisplayName("GetAllUsers returns INVALID_TOKEN if token is invalid")
-        public void getAllUsers_shouldReturnInvalidToken_IfTokenIsInvalid() throws Exception {
-            try (MockedStatic<TokenUtil> mockedTokenUtil = mockStatic(TokenUtil.class)) {
-                mockedTokenUtil.when(() -> TokenUtil.isValid("Foo"))
-                               .thenReturn(false);
+            @Test
+            @DisplayName("Returns the user list if token is valid and is an admin token")
+            public void getAllUsers_shouldReturnUser_whenCorrectParamsAndTokenIsValidAndIsAdmin() throws Exception {
+                try (MockedStatic<TokenUtil> mockedTokenUtil = mockStatic(TokenUtil.class)) {
+                    mockedTokenUtil.when(() -> TokenUtil.isValid("Foo"))
+                                   .thenReturn(true);
+                    mockedTokenUtil.when(() -> TokenUtil.isAdmin("Foo"))
+                                   .thenReturn(true);
 
-                mockMvc.perform(post("/user/all")
-                        .param("token", "Foo"))
-                       .andExpect(status().isOk())
-                       .andExpect(jsonPath("$.code").value(Response.Code.INVALID_TOKEN.toString()));
+                    mockMvc.perform(post(uri)
+                            .param("token", "Foo"))
+                           .andExpect(status().isOk())
+                           .andExpect(jsonPath("$.content").isNotEmpty())
+                           .andExpect(jsonPath("$.content").isArray())
+                           .andExpect(jsonPath("$.content[*].username").exists())
+                           .andExpect(jsonPath("$.content[*].firstName").exists())
+                           .andExpect(jsonPath("$.content[*].lastName").exists())
+                           .andExpect(jsonPath("$.content[*].email").exists())
+                           .andExpect(jsonPath("$.content[*].birthday").exists())
+                           .andExpect(jsonPath("$.content[*].registrationDate").exists())
+                           .andExpect(jsonPath("$.content[*].admin").exists());
+                }
             }
-        }
 
-        @Test
-        @DisplayName("GetAllUsers returns INSUFFICIENT_PERMISSIONS if token is not an admin token")
-        public void getAllUsers_shouldReturnInsufficientPermissions_IfTokenIsNotAdminToken() throws Exception {
-            try (MockedStatic<TokenUtil> mockedTokenUtil = mockStatic(TokenUtil.class)) {
-                mockedTokenUtil.when(() -> TokenUtil.isValid("Foo"))
-                               .thenReturn(true);
-                mockedTokenUtil.when(() -> TokenUtil.isAdmin("Foo"))
-                               .thenReturn(false);
-
-                mockMvc.perform(post("/user/all", "Foo")
-                        .param("token", "Foo"))
-                       .andExpect(status().isOk())
-                       .andExpect(jsonPath("$.code").value(Response.Code.INSUFFICIENT_PERMISSIONS.toString()));
-            }
-        }
-
-        @Test
-        @DisplayName("GetAllUsers returns the user list if token is valid and is an admin token")
-        public void getAllUsers_shouldReturnUser_ifCorrectParamsAndTokenIsValidAndIsAdmin() throws Exception {
-            try (MockedStatic<TokenUtil> mockedTokenUtil = mockStatic(TokenUtil.class)) {
-                mockedTokenUtil.when(() -> TokenUtil.isValid("Foo"))
-                               .thenReturn(true);
-                mockedTokenUtil.when(() -> TokenUtil.isAdmin("Foo"))
-                               .thenReturn(true);
-
-                mockMvc.perform(post("/user/all")
-                        .param("token", "Foo"))
-                       .andExpect(status().isOk())
-                       .andExpect(jsonPath("$.content").isNotEmpty())
-                       .andExpect(jsonPath("$.content").isArray())
-                       .andExpect(jsonPath("$.content[*].username").exists())
-                       .andExpect(jsonPath("$.content[*].firstName").exists())
-                       .andExpect(jsonPath("$.content[*].lastName").exists())
-                       .andExpect(jsonPath("$.content[*].email").exists())
-                       .andExpect(jsonPath("$.content[*].birthday").exists())
-                       .andExpect(jsonPath("$.content[*].registrationDate").exists())
-                       .andExpect(jsonPath("$.content[*].admin").exists());
-            }
         }
 
     }
 
     @Nested
-    class UserController_CheckUsernameAvailability {
+    class Search {
 
-        @Test
-        @DisplayName("Always returns OK")
-        public void checkUsernameAvailability_ShouldAlwaysReturnOK() throws Exception {
-            when(userService.usernameIsAvailable("Foo")).thenReturn(true);
-            mockMvc.perform(get("/user/check_username/{username}", "Foo"))
-                   .andExpect(status().isOk())
-                   .andExpect(jsonPath("$.code").value(Response.Code.OK.toString()));
-
-            when(userService.usernameIsAvailable("Foo")).thenReturn(false);
-            mockMvc.perform(get("/user/check_username/{username}", "Foo"))
-                   .andExpect(status().isOk())
-                   .andExpect(jsonPath("$.code").value(Response.Code.OK.toString()));
-        }
-
-        @Test
-        @DisplayName("Returns true if the username is available")
-        public void checkUsernameAvailability_ShouldReturnTrue_IfTheUsernameIsAvailable() throws Exception {
-            when(userService.usernameIsAvailable("Foo")).thenReturn(true);
-
-            mockMvc.perform(get("/user/check_username/{username}", "Foo"))
-                   .andExpect(status().isOk())
-                   .andExpect(jsonPath("$.content").value(true));
-        }
-
-        @Test
-        @DisplayName("Returns false if the username is not available")
-        public void checkUsernameAvailability_ShouldReturnFalse_IfTheUsernameIsNotAvailable() throws Exception {
-            when(userService.usernameIsAvailable("Foo")).thenReturn(false);
-
-            mockMvc.perform(get("/user/check_username/{username}", "Foo"))
-                   .andExpect(status().isOk())
-                   .andExpect(jsonPath("$.content").value(false));
-        }
-
-    }
-
-    @Nested
-    class UserController_Search {
+        private final String uri = "/user/search";
 
         @BeforeEach
         public void setUp() {
@@ -566,20 +583,20 @@ public class UserControllerTest {
             user.setBirthday(LocalDate.EPOCH);
             user.setRegistrationDate(LocalDate.EPOCH);
 
-
-            when(userService.search("Foo", "null", "null", "null", "null", "null", "null")).thenReturn(Collections.singletonList(user));
+            when(userService.search("Foo", "null", "null", "null", "null", "null", "null"))
+                    .thenReturn(Collections.singletonList(user));
         }
 
         @Test
-        @DisplayName("Search returns OK if token is valid and is an admin token")
-        public void search_shouldReturnOK_ifTokenIsValidAndIsAdmin() throws Exception {
+        @DisplayName("Returns OK if token is valid and is an admin token")
+        public void search_shouldReturnOK_whenTokenIsValidAndIsAdmin() throws Exception {
             try (MockedStatic<TokenUtil> mockedTokenUtil = mockStatic(TokenUtil.class)) {
                 mockedTokenUtil.when(() -> TokenUtil.isValid("Foo"))
                                .thenReturn(true);
                 mockedTokenUtil.when(() -> TokenUtil.isAdmin("Foo"))
                                .thenReturn(true);
 
-                mockMvc.perform(post("/user/search")
+                mockMvc.perform(post(uri)
                         .param("token", "Foo"))
                        .andExpect(status().isOk())
                        .andExpect(jsonPath("$.code").value(Response.Code.OK.toString()));
@@ -587,15 +604,15 @@ public class UserControllerTest {
         }
 
         @Test
-        @DisplayName("Search returns INSUFFICIENT_PERMISSIONS if token is not an admin token")
-        public void Search_shouldReturnInsufficientPermissions_IfTokenIsNotAdminToken() throws Exception {
+        @DisplayName("Returns INSUFFICIENT_PERMISSIONS if token is not an admin token")
+        public void Search_shouldReturnInsufficientPermissions_whenTokenIsNotAdminToken() throws Exception {
             try (MockedStatic<TokenUtil> mockedTokenUtil = mockStatic(TokenUtil.class)) {
                 mockedTokenUtil.when(() -> TokenUtil.isValid("Foo"))
                                .thenReturn(true);
                 mockedTokenUtil.when(() -> TokenUtil.isAdmin("Foo"))
                                .thenReturn(false);
 
-                mockMvc.perform(post("/user/search")
+                mockMvc.perform(post(uri)
                         .param("token", "Foo"))
                        .andExpect(status().isOk())
                        .andExpect(jsonPath("$.code").value(Response.Code.INSUFFICIENT_PERMISSIONS.toString()));
@@ -603,13 +620,13 @@ public class UserControllerTest {
         }
 
         @Test
-        @DisplayName("Search returns INVALID_TOKEN if token is invalid")
-        public void Search_shouldReturnInvalidToken_IfTokenIsInvalid() throws Exception {
+        @DisplayName("Returns INVALID_TOKEN if token is invalid")
+        public void Search_shouldReturnInvalidToken_whenTokenIsInvalid() throws Exception {
             try (MockedStatic<TokenUtil> mockedTokenUtil = mockStatic(TokenUtil.class)) {
                 mockedTokenUtil.when(() -> TokenUtil.isValid("Foo"))
                                .thenReturn(false);
 
-                mockMvc.perform(post("/user/search")
+                mockMvc.perform(post(uri)
                         .param("token", "Foo"))
                        .andExpect(status().isOk())
                        .andExpect(jsonPath("$.code").value(Response.Code.INVALID_TOKEN.toString()));
@@ -617,7 +634,7 @@ public class UserControllerTest {
         }
 
         @Test
-        @DisplayName("Search returns the list of users found")
+        @DisplayName("Returns the list of matching users")
         public void Search_shouldReturnMatchingUsers() throws Exception {
             try (MockedStatic<TokenUtil> mockedTokenUtil = mockStatic(TokenUtil.class)) {
                 mockedTokenUtil.when(() -> TokenUtil.isValid("Foo"))
@@ -625,7 +642,7 @@ public class UserControllerTest {
                 mockedTokenUtil.when(() -> TokenUtil.isAdmin("Foo"))
                                .thenReturn(true);
 
-                mockMvc.perform(post("/user/search")
+                mockMvc.perform(post(uri)
                         .param("token", "Foo")
                         .param("username", "Foo"))
                        .andExpect(status().isOk())
@@ -640,6 +657,45 @@ public class UserControllerTest {
                        .andExpect(jsonPath("$.content[*].admin").exists());
             }
         }
+    }
+
+    @Nested
+    class CheckUsernameAvailability {
+
+        @Test
+        @DisplayName("Always returns OK")
+        public void checkUsernameAvailability_shouldAlwaysReturnOK() throws Exception {
+            when(userService.usernameIsAvailable("Foo")).thenReturn(true);
+            mockMvc.perform(get("/user/check_username/{username}", "Foo"))
+                   .andExpect(status().isOk())
+                   .andExpect(jsonPath("$.code").value(Response.Code.OK.toString()));
+
+            when(userService.usernameIsAvailable("Foo")).thenReturn(false);
+            mockMvc.perform(get("/user/check_username/{username}", "Foo"))
+                   .andExpect(status().isOk())
+                   .andExpect(jsonPath("$.code").value(Response.Code.OK.toString()));
+        }
+
+        @Test
+        @DisplayName("Returns true if the username is available")
+        public void checkUsernameAvailability_shouldReturnTrue_whenTheUsernameIsAvailable() throws Exception {
+            when(userService.usernameIsAvailable("Foo")).thenReturn(true);
+
+            mockMvc.perform(get("/user/check_username/{username}", "Foo"))
+                   .andExpect(status().isOk())
+                   .andExpect(jsonPath("$.content").value(true));
+        }
+
+        @Test
+        @DisplayName("Returns false if the username is not available")
+        public void checkUsernameAvailability_shouldReturnFalse_whenTheUsernameIsNotAvailable() throws Exception {
+            when(userService.usernameIsAvailable("Foo")).thenReturn(false);
+
+            mockMvc.perform(get("/user/check_username/{username}", "Foo"))
+                   .andExpect(status().isOk())
+                   .andExpect(jsonPath("$.content").value(false));
+        }
+
     }
 
 }
