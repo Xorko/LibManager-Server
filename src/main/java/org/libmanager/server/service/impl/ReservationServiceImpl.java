@@ -129,7 +129,8 @@ public class ReservationServiceImpl implements ReservationService {
      * @param item  The item the user wants to borrow
      * @return      True if the user can borrow the item, false otherwise
      */
-    private boolean checkReservationLimits(User user, Item item) {
+    // Visibility is set to public instead of private because Mockito doesn't support private methods mocking
+    public boolean checkReservationLimits(User user, Item item) {
         // Admin users can borrow as many items they want
         if (!user.isAdmin()) {
             // Membership duration in years
@@ -164,7 +165,8 @@ public class ReservationServiceImpl implements ReservationService {
      * @param nbBorrowed            The number of books already borrowed by the user
      * @return                      True if the user can borrow a book, false otherwise
      */
-    private boolean checkBookReservationLimits(long membershipDuration, boolean isAdult, int nbBorrowed) {
+    // Visibility is set to public instead of private because Mockito doesn't support private methods mocking
+    public boolean checkBookReservationLimits(long membershipDuration, boolean isAdult, int nbBorrowed) {
         if (isAdult) {
             // During his first year of membership, the adult user can borrow up to 4 books
             if (membershipDuration < 1)
@@ -188,7 +190,8 @@ public class ReservationServiceImpl implements ReservationService {
      * @param nbBorrowed            The number of DVDs already borrowed by the user
      * @return                      True if the user can borrow a DVD, false otherwise
      */
-    private boolean checkDVDReservationLimits(long membershipDuration, boolean isAdult, int nbBorrowed) {
+    // Visibility is set to protected public of private because Mockito doesn't support private methods mocking
+    public boolean checkDVDReservationLimits(long membershipDuration, boolean isAdult, int nbBorrowed) {
         if (isAdult) {
             // During his first year of membership, the adult user can borrow up to 2 DVDs
             if (membershipDuration < 1)
