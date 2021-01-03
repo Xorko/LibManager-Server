@@ -197,7 +197,7 @@ public class UserController {
     @GetMapping(path = "/check_username/{username}")
     public @ResponseBody
     Response<Boolean> checkUsernameAvailability(@PathVariable String username) {
-        return new Response<>(Response.Code.OK, userService.usernameIsAvailable(username));
+        return new Response<>(Response.Code.OK, userService.usernameIsUnique(username));
     }
 
 }
