@@ -1,47 +1,59 @@
 package org.libmanager.server.specification;
 
+import java.time.LocalDate;
+
 import org.libmanager.server.entity.User;
 import org.springframework.data.jpa.domain.Specification;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+public class UserSpecification {
 
-public class UserSpecification implements Specification<User> {
-
-    private final User filter;
-
-    public UserSpecification(User filter) {
-        super();
-        this.filter = filter;
+    public static Specification<User> usernameLike(String username) {
+        return ((root, query, criteriaBuilder) ->
+                username.equals("null") ?
+                        criteriaBuilder.conjunction() :
+                        criteriaBuilder.like(root.get("username"), '%' + username + '%'));
     }
 
-    @Override
-    public Predicate toPredicate(Root<User> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
-        Predicate p = criteriaBuilder.disjunction();
-
-        if (filter.getUsername() != null)
-            p.getExpressions().add(criteriaBuilder.like(root.get("username"), filter.getUsername()));
-
-        if (filter.getFirstName() != null)
-            p.getExpressions().add(criteriaBuilder.like(root.get("firstName"), filter.getFirstName()));
-
-        if (filter.getLastName() != null)
-            p.getExpressions().add(criteriaBuilder.like(root.get("lastName"), filter.getLastName()));
-
-        if (filter.getEmail() != null)
-            p.getExpressions().add(criteriaBuilder.like(root.get("email"), filter.getEmail()));
-
-        if (filter.getAddress() != null)
-            p.getExpressions().add(criteriaBuilder.like(root.get("address"), filter.getAddress()));
-
-        if (filter.getBirthday() != null)
-            p.getExpressions().add(criteriaBuilder.equal(root.get("birthday"), filter.getBirthday()));
-
-        if (filter.getRegistrationDate() != null)
-            p.getExpressions().add(criteriaBuilder.equal(root.get("registrationDate"), filter.getRegistrationDate()));
-
-        return p;
+    public static Specification<User> firstNameLike(String firstName) {
+        return ((root, query, criteriaBuilder) ->
+                firstName.equals("null") ?
+                        criteriaBuilder.conjunction() :
+                        criteriaBuilder.like(root.get("firstName"), '%' + firstName + '%'));
     }
+
+    public static Specification<User> lastNameLike(String lastName) {
+        return ((root, query, criteriaBuilder) ->
+                lastName.equals("null") ?
+                        criteriaBuilder.conjunction() :
+                        criteriaBuilder.like(root.get("lastName"), '%' + lastName + '%'));
+    }
+
+    public static Specification<User> emailLike(String email) {
+        return ((root, query, criteriaBuilder) ->
+                email.equals("null") ?
+                        criteriaBuilder.conjunction() :
+                        criteriaBuilder.like(root.get("email"), '%' + email + '%'));
+    }
+
+    public static Specification<User> addressLike(String address) {
+        return ((root, query, criteriaBuilder) ->
+                address.equals("null") ?
+                        criteriaBuilder.conjunction() :
+                        criteriaBuilder.like(root.get("address"), '%' + address + '%'));
+    }
+
+    public static Specification<User> birthdayEquals(LocalDate birthday) {
+        return ((root, query, criteriaBuilder) ->
+                birthday == null ?
+                        criteriaBuilder.conjunction() :
+                        criteriaBuilder.equal(root.get("birthday"), birthday));
+    }
+
+    public static Specification<User> registrationDateEquals(LocalDate registrationDate) {
+        return ((root, query, criteriaBuilder) ->
+                registrationDate == null ?
+                        criteriaBuilder.conjunction() :
+                        criteriaBuilder.equal(root.get("registrationDate"), registrationDate));
+    }
+
 }

@@ -120,15 +120,16 @@ public class BookServiceImpl implements BookService {
             String releaseDate,
             String status
     ) {
-        Book filter = new Book();
-        filter.setTitle('%' + title + '%');
-        filter.setAuthor('%' + author + '%');
-        filter.setPublisher('%' + publisher + '%');
-        filter.setIsbn('%' + isbn + '%');
-        filter.setGenre(genre);
-        filter.setReleaseDate(DateUtil.parseDB(releaseDate));
+        Specification<Book> titleLike = BookSpecification.titleLike(title);
+        Specification<Book> authorLike = BookSpecification.authorLike(author);
+        Specification<Book> publisherLike = BookSpecification.publisherLike(publisher);
+        Specification<Book> isbnLike = BookSpecification.isbnLike(isbn);
+        Specification<Book> releaseDateEquals = BookSpecification.releaseDateEquals(DateUtil.parseDB(releaseDate));
+        Specification<Book> genreEquals = BookSpecification.genreEquals(genre);
+        Specification<Book> statusEquals = BookSpecification.statusEquals(status);
 
-        Specification<Book> spec = new BookSpecification(filter, status);
+        Specification<Book> spec = Specification.where(titleLike).and(authorLike).and(publisherLike).and(isbnLike)
+                                                .and(releaseDateEquals).and(genreEquals).and(statusEquals);
 
         return bookRepository.findAll(spec);
     }

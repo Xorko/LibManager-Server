@@ -1,53 +1,60 @@
 package org.libmanager.server.specification;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import java.time.LocalDate;
 
 import org.libmanager.server.entity.Book;
 import org.springframework.data.jpa.domain.Specification;
 
-public class BookSpecification implements Specification<Book> {
+public class BookSpecification {
 
-    private final Book filter;
-    private final String status;
-
-    public BookSpecification(Book filter, String status) {
-        super();
-        this.filter = filter;
-        this.status = status;
+    public static Specification<Book> titleLike(String title) {
+        return ((root, query, criteriaBuilder) ->
+                title.equals("null") ?
+                        criteriaBuilder.conjunction() :
+                        criteriaBuilder.like(root.get("title"), '%' + title + '%'));
     }
 
-    @Override
-    public Predicate toPredicate(Root<Book> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
-        Predicate p = criteriaBuilder.disjunction();
+    public static Specification<Book> authorLike(String author) {
+        return ((root, query, criteriaBuilder) ->
+                author.equals("null") ?
+                        criteriaBuilder.conjunction() :
+                        criteriaBuilder.like(root.get("author"), '%' + author + '%'));
+    }
 
-        if (filter.getTitle() != null)
-            p.getExpressions().add(criteriaBuilder.like(root.get("title"), filter.getTitle()));
+    public static Specification<Book> publisherLike(String publisher) {
+        return ((root, query, criteriaBuilder) ->
+                publisher.equals("null") ?
+                        criteriaBuilder.conjunction() :
+                        criteriaBuilder.like(root.get("author"), '%' + publisher + '%'));
+    }
 
-        if (filter.getAuthor() != null)
-            p.getExpressions().add(criteriaBuilder.like(root.get("author"), filter.getAuthor()));
+    public static Specification<Book> isbnLike(String isbn) {
+        return ((root, query, criteriaBuilder) ->
+                isbn.equals("null") ?
+                        criteriaBuilder.conjunction() :
+                        criteriaBuilder.like(root.get("author"), '%' + isbn + '%'));
+    }
 
-        if (filter.getPublisher() != null)
-            p.getExpressions().add(criteriaBuilder.like(root.get("publisher"), filter.getPublisher()));
+    public static Specification<Book> genreEquals(String genre) {
+        return ((root, query, criteriaBuilder) ->
+                genre.equals("null") ?
+                        criteriaBuilder.conjunction() :
+                        criteriaBuilder.equal(root.get("genre"), genre));
+    }
 
-        if (filter.getIsbn() != null)
-            p.getExpressions().add(criteriaBuilder.like(root.get("isbn"), filter.getIsbn()));
+    public static Specification<Book> releaseDateEquals(LocalDate releaseDate) {
+        return ((root, query, criteriaBuilder) ->
+                releaseDate == null ?
+                        criteriaBuilder.conjunction() :
+                        criteriaBuilder.equal(root.get("releaseDate"), releaseDate));
+    }
 
-        if (filter.getGenre() != null)
-            p.getExpressions().add(criteriaBuilder.equal(root.get("genre"), filter.getGenre()));
-
-        if (filter.getReleaseDate() != null)
-            p.getExpressions().add(criteriaBuilder.equal(root.get("releaseDate"), filter.getReleaseDate()));
-
-        if (!status.equals("null")) {
-            if (Integer.parseInt(status) == 0)
-                p.getExpressions().add(criteriaBuilder.equal(root.get("status"), false));
-            if (Integer.parseInt(status) == 1)
-                p.getExpressions().add(criteriaBuilder.equal(root.get("status"), true));
-        }
-
-        return p;
+    public static Specification<Book> statusEquals(String status) {
+        return ((root, query, criteriaBuilder) ->
+                status.equals("null") ?
+                        criteriaBuilder.conjunction() :
+                        status.equals("0") ?
+                                criteriaBuilder.equal(root.get("status"), false) :
+                                criteriaBuilder.equal(root.get("status"), true));
     }
 }

@@ -108,19 +108,14 @@ public class ReservationServiceImpl implements ReservationService {
      * {@inheritDoc}
      */
     public Iterable<Reservation> search(long id, String username, String title, String type, String reservationDate) {
-        User user = new User();
-        user.setUsername('%' + username + '%');
+        Specification<Reservation> idEquals = ReservationSpecification.idEquals(id);
+        Specification<Reservation> usernameLike = ReservationSpecification.usernameLike(username);
+        Specification<Reservation> titleLike = ReservationSpecification.titleLike(title);
+        Specification<Reservation> dateEquals = ReservationSpecification.dateEquals(DateUtil.parseDB(reservationDate));
+        Specification<Reservation> typeEquals = ReservationSpecification.typeEquals(type);
 
-        Item item = new Book();
-        item.setTitle('%' + title + '%');
-
-        Reservation filter = new Reservation();
-        filter.setId(id);
-        filter.setItem(item);
-        filter.setUser(user);
-        filter.setReservationDate(DateUtil.parseDB(reservationDate));
-
-        Specification<Reservation> spec = new ReservationSpecification(filter, type);
+        Specification<Reservation> spec = Specification.where(idEquals).and(usernameLike).and(titleLike).and(dateEquals)
+                                                       .and(typeEquals);
 
         return reservationRepository.findAll(spec);
     }

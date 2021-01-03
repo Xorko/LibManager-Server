@@ -14,13 +14,13 @@ import org.libmanager.server.entity.User;
 import org.libmanager.server.repository.UserRepository;
 import org.libmanager.server.response.Response;
 import org.libmanager.server.service.impl.UserServiceImpl;
-import org.libmanager.server.specification.UserSpecification;
+import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.jpa.domain.Specification;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
@@ -101,7 +101,7 @@ public class UserServiceTest {
         @Test
         @DisplayName("Returns matching users")
         public void search_shouldReturnMatchingUsers() {
-            when(userRepository.findAll(any(UserSpecification.class))).thenReturn(userIterable);
+            when(userRepository.findAll(ArgumentMatchers.<Specification<User>>any())).thenReturn(userIterable);
 
             Iterable<User> result = userService.search(
                     user.getUsername(),

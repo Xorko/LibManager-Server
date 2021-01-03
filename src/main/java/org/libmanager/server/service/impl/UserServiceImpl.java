@@ -46,16 +46,17 @@ public class UserServiceImpl implements UserService {
             String birthday,
             String registrationDate
     ) {
-        User filter = new User();
-        filter.setUsername('%' + username + '%');
-        filter.setFirstName('%' + firstName + '%');
-        filter.setLastName('%' + lastName + '%');
-        filter.setEmail('%' + email + '%');
-        filter.setAddress('%' + address + '%');
-        filter.setBirthday(DateUtil.parseDB(birthday));
-        filter.setRegistrationDate(DateUtil.parseDB(registrationDate));
+        Specification<User> usernameLike = UserSpecification.usernameLike(username);
+        Specification<User> firstNameLike = UserSpecification.firstNameLike(firstName);
+        Specification<User> lastNameLike = UserSpecification.lastNameLike(lastName);
+        Specification<User> emailLike = UserSpecification.emailLike(email);
+        Specification<User> addressLike = UserSpecification.addressLike(address);
+        Specification<User> birthdayEquals = UserSpecification.birthdayEquals(DateUtil.parseDB(birthday));
+        Specification<User> registrationDateEquals = UserSpecification.registrationDateEquals(DateUtil.parseDB(registrationDate));
 
-        Specification<User> spec = new UserSpecification(filter);
+
+        Specification<User> spec = Specification.where(usernameLike).and(firstNameLike).and(lastNameLike).and(emailLike)
+                                                .and(addressLike).and(birthdayEquals).and(registrationDateEquals);
 
         return userRepository.findAll(spec);
     }

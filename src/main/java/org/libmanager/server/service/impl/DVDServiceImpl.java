@@ -114,13 +114,14 @@ public class DVDServiceImpl implements DVDService {
             String releaseDate,
             String status
     ) {
-        DVD filter = new DVD();
-        filter.setTitle('%' + title + '%');
-        filter.setAuthor('%' + author + '%');
-        filter.setGenre(genre);
-        filter.setReleaseDate(DateUtil.parseDB(releaseDate));
+        Specification<DVD> titleLike = DVDSpecification.titleLike(title);
+        Specification<DVD> directorLike = DVDSpecification.directorLike(author);
+        Specification<DVD> genreEquals = DVDSpecification.genreEquals(genre);
+        Specification<DVD> releaseDateEquals = DVDSpecification.releaseDateEquals(DateUtil.parseDB(releaseDate));
+        Specification<DVD> statusEquals = DVDSpecification.statusEquals(status);
 
-        Specification<DVD> spec = new DVDSpecification(filter, status);
+        Specification<DVD> spec = Specification.where(titleLike).and(directorLike).and(genreEquals)
+                                               .and(releaseDateEquals).and(statusEquals);
 
         return dvdRepository.findAll(spec);
     }

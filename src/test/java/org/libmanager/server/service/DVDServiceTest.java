@@ -15,13 +15,13 @@ import org.libmanager.server.repository.DVDRepository;
 import org.libmanager.server.repository.ItemRepository;
 import org.libmanager.server.response.Response;
 import org.libmanager.server.service.impl.DVDServiceImpl;
-import org.libmanager.server.specification.DVDSpecification;
+import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.jpa.domain.Specification;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -249,7 +249,7 @@ public class DVDServiceTest {
         @Test
         @DisplayName("Returns matching dvds")
         public void search_shouldReturnMatchingDVDs() {
-            when(dvdRepository.findAll(any(DVDSpecification.class))).thenReturn(dvdList);
+            when(dvdRepository.findAll(ArgumentMatchers.<Specification<DVD>>any())).thenReturn(dvdList);
 
             Iterable<DVD> result = dvdService.search(
                     dvd.getTitle(),
