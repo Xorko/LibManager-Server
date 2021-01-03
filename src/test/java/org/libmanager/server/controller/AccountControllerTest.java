@@ -1,4 +1,4 @@
-package org.libmanager.server.controller;
+package org.libmanager.server.unit.controller;
 
 import java.time.LocalDate;
 
@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.libmanager.server.controller.AccountController;
 import org.libmanager.server.response.AuthenticatedUser;
 import org.libmanager.server.response.Response;
 import org.libmanager.server.service.AccountService;
@@ -39,7 +40,7 @@ public class AccountControllerTest {
         private Response<AuthenticatedUser> response;
 
         @BeforeEach
-        public void init() {
+        public void setUp() {
             AuthenticatedUser authenticatedUser = new AuthenticatedUser();
             authenticatedUser.setUsername("Foo");
             authenticatedUser.setToken("Foo");
@@ -142,7 +143,6 @@ public class AccountControllerTest {
         public void passwordResetEdit_ShouldReturnInvalidMailToken_whenMailTokenIsInValid() throws Exception {
             try (MockedStatic<TokenUtil> mockedTokenUtil = mockStatic(TokenUtil.class)) {
                 mockedTokenUtil.when(() -> TokenUtil.isMailToken("Foo")).thenReturn(false);
-                when(accountService.resetPassword("Foo", "Foo")).thenReturn(false);
 
                 mockMvc.perform(post(uri)
                         .param("token", "Foo")

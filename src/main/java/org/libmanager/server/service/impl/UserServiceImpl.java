@@ -72,7 +72,7 @@ public class UserServiceImpl implements UserService {
             String birthday,
             String password
     ) {
-        if (userRepository.count() + 1 < 2000) {
+        if (userRepository.count() + 1 <= 2000) {
             User user = new User();
             user.setUsername(username);
             user.setPassword(BCrypt.hashpw(password, BCrypt.gensalt()));
@@ -126,7 +126,7 @@ public class UserServiceImpl implements UserService {
     /**
      * {@inheritDoc}
      */
-    public boolean usernameIsAvailable(String username) {
+    public boolean usernameIsUnique(String username) {
         return get(username) == null;
     }
 

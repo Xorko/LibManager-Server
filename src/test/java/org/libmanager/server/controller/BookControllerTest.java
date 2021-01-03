@@ -1,4 +1,4 @@
-package org.libmanager.server.controller;
+package org.libmanager.server.unit.controller;
 
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.libmanager.server.controller.BookController;
 import org.libmanager.server.entity.Book;
 import org.libmanager.server.response.Response;
 import org.libmanager.server.service.BookService;
@@ -269,7 +270,7 @@ public class BookControllerTest {
         private Book book;
 
         @BeforeEach
-        public void init() {
+        public void setUp() {
             book = new Book();
             book.setTitle("Foo");
             book.setAuthor("Foo");
@@ -287,7 +288,7 @@ public class BookControllerTest {
             private final String uri = "/item/book/get/{id}";
 
             @BeforeEach
-            public void init() {
+            public void setUp() {
                 when(bookService.get(1)).thenReturn(book);
                 when(bookService.get(2)).thenReturn(null);
             }
@@ -345,7 +346,7 @@ public class BookControllerTest {
             private final String uri = "/item/book/all";
 
             @BeforeEach
-            public void init() {
+            public void setUp() {
                 Iterable<Book> bookIterable = Arrays.asList(book, book, book);
                 when(bookService.getAll()).thenReturn(bookIterable);
             }
@@ -383,7 +384,7 @@ public class BookControllerTest {
         private final String uri = "/item/book/search";
 
         @BeforeEach
-        public void init() {
+        public void setUp() {
             Book book = new Book();
             book.setTitle("Foo");
             book.setAuthor("Foo");

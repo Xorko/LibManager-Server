@@ -1,4 +1,4 @@
-package org.libmanager.server.controller;
+package org.libmanager.server.unit.controller;
 
 import java.util.Arrays;
 
@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.libmanager.server.controller.ReservationController;
 import org.libmanager.server.entity.Book;
 import org.libmanager.server.entity.Item;
 import org.libmanager.server.entity.Reservation;
@@ -223,7 +224,7 @@ public class ReservationControllerTest {
         private Reservation reservation;
 
         @BeforeEach
-        public void init() {
+        public void setUp() {
             User user = new User();
             Book book = new Book();
 
@@ -371,7 +372,7 @@ public class ReservationControllerTest {
             private Iterable<Reservation> reservationIterable;
 
             @BeforeEach
-            public void init() {
+            public void setUp() {
                 reservationIterable = Arrays.asList(reservation, reservation, reservation);
             }
 
@@ -488,7 +489,7 @@ public class ReservationControllerTest {
         private Iterable<Reservation> reservationIterable;
 
         @BeforeEach
-        public void init() {
+        public void setUp() {
             User user = new User();
             Book book = new Book();
 
@@ -617,7 +618,7 @@ public class ReservationControllerTest {
         private Iterable<Reservation> reservationIterable;
 
         @BeforeEach
-        public void init() {
+        public void setUp() {
             Reservation reservation = new Reservation();
             User user = new User();
             Item book = new Book();

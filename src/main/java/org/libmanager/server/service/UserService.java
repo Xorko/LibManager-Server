@@ -91,6 +91,6 @@ public interface UserService {
      * @param username  The username to check
      * @return          True if the username is unique, false otherwise
      */
-    boolean usernameIsAvailable(String username);
+    boolean usernameIsUnique(String username);
 
 }

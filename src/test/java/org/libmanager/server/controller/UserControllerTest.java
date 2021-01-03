@@ -1,14 +1,14 @@
-package org.libmanager.server.controller;
+package org.libmanager.server.unit.controller;
 
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collections;
 
-import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.libmanager.server.controller.UserController;
 import org.libmanager.server.entity.User;
 import org.libmanager.server.response.Response;
 import org.libmanager.server.service.UserService;
@@ -315,7 +315,7 @@ public class UserControllerTest {
         private User user;
 
         @BeforeEach
-        public void init() {
+        public void setUp() {
             user = new User();
             user.setAdmin(false);
             user.setUsername("Foo");
@@ -334,7 +334,7 @@ public class UserControllerTest {
             private final String uri = "/user/get/{username}";
 
             @BeforeEach
-            public void init() {
+            public void setUp() {
                 when(userService.get("Foo")).thenReturn(user);
                 when(userService.get("Bar")).thenReturn(null);
             }
@@ -455,7 +455,7 @@ public class UserControllerTest {
             private final String uri = "/user/all";
 
             @BeforeEach
-            public void init() {
+            public void setUp() {
                 Iterable<User> userIterable = Arrays.asList(user, user, user);
                 when(userService.getAll()).thenReturn(userIterable);
             }
@@ -665,12 +665,12 @@ public class UserControllerTest {
         @Test
         @DisplayName("Always returns OK")
         public void checkUsernameAvailability_shouldAlwaysReturnOK() throws Exception {
-            when(userService.usernameIsAvailable("Foo")).thenReturn(true);
+            when(userService.usernameIsUnique("Foo")).thenReturn(true);
             mockMvc.perform(get("/user/check_username/{username}", "Foo"))
                    .andExpect(status().isOk())
                    .andExpect(jsonPath("$.code").value(Response.Code.OK.toString()));
 
-            when(userService.usernameIsAvailable("Foo")).thenReturn(false);
+            when(userService.usernameIsUnique("Foo")).thenReturn(false);
             mockMvc.perform(get("/user/check_username/{username}", "Foo"))
                    .andExpect(status().isOk())
                    .andExpect(jsonPath("$.code").value(Response.Code.OK.toString()));
@@ -679,7 +679,7 @@ public class UserControllerTest {
         @Test
         @DisplayName("Returns true if the username is available")
         public void checkUsernameAvailability_shouldReturnTrue_whenTheUsernameIsAvailable() throws Exception {
-            when(userService.usernameIsAvailable("Foo")).thenReturn(true);
+            when(userService.usernameIsUnique("Foo")).thenReturn(true);
 
             mockMvc.perform(get("/user/check_username/{username}", "Foo"))
                    .andExpect(status().isOk())
@@ -689,7 +689,7 @@ public class UserControllerTest {
         @Test
         @DisplayName("Returns false if the username is not available")
         public void checkUsernameAvailability_shouldReturnFalse_whenTheUsernameIsNotAvailable() throws Exception {
-            when(userService.usernameIsAvailable("Foo")).thenReturn(false);
+            when(userService.usernameIsUnique("Foo")).thenReturn(false);
 
             mockMvc.perform(get("/user/check_username/{username}", "Foo"))
                    .andExpect(status().isOk())

@@ -1,4 +1,4 @@
-package org.libmanager.server.controller;
+package org.libmanager.server.unit.controller;
 
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.libmanager.server.controller.DVDController;
 import org.libmanager.server.entity.DVD;
 import org.libmanager.server.response.Response;
 import org.libmanager.server.service.DVDService;
@@ -262,7 +263,7 @@ public class DVDControllerTest {
         private DVD dvd;
 
         @BeforeEach
-        public void init() {
+        public void setUp() {
             dvd = new DVD();
             dvd.setTitle("Foo");
             dvd.setAuthor("Foo");
@@ -279,7 +280,7 @@ public class DVDControllerTest {
             private final String uri = "/item/dvd/get/{id}";
 
             @BeforeEach
-            public void init() {
+            public void setUp() {
                 when(dvdService.get(1)).thenReturn(dvd);
                 when(dvdService.get(2)).thenReturn(null);
             }
@@ -335,7 +336,7 @@ public class DVDControllerTest {
             private final String uri = "/item/dvd/all";
 
             @BeforeEach
-            public void init() {
+            public void setUp() {
                 Iterable<DVD> bookIterable = Arrays.asList(dvd, dvd, dvd);
                 when(dvdService.getAll()).thenReturn(bookIterable);
             }
@@ -380,7 +381,7 @@ public class DVDControllerTest {
         private final String uri = "/item/dvd/search";
 
         @BeforeEach
-        public void init() {
+        public void setUp() {
             DVD dvd = new DVD();
             dvd.setTitle("Foo");
             dvd.setAuthor("Foo");
