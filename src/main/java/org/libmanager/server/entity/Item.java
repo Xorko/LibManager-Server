@@ -29,7 +29,7 @@ public abstract class Item implements Serializable {
     @Column(nullable = false)
     private LocalDate releaseDate;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 64)
     private String genre;
 
     @Column(nullable = false)
