@@ -1,4 +1,4 @@
-package org.libmanager.server.unit.controller;
+package org.libmanager.server.controller;
 
 import java.time.LocalDate;
 
@@ -6,7 +6,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.libmanager.server.controller.AccountController;
 import org.libmanager.server.response.AuthenticatedUser;
 import org.libmanager.server.response.Response;
 import org.libmanager.server.service.AccountService;

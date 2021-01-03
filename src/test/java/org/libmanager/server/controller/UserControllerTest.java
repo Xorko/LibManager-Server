@@ -1,4 +1,4 @@
-package org.libmanager.server.unit.controller;
+package org.libmanager.server.controller;
 
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -8,7 +8,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.libmanager.server.controller.UserController;
 import org.libmanager.server.entity.User;
 import org.libmanager.server.response.Response;
 import org.libmanager.server.service.UserService;
