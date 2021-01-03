@@ -114,13 +114,15 @@ public class UserServiceImpl implements UserService {
     /**
      * {@inheritDoc}
      */
-    public boolean delete(String username) {
+    public Response<Boolean> delete(String username) {
         Optional<User> foundUser = userRepository.findById(username);
         if (foundUser.isEmpty())
-            return false;
+            return new Response<>(Response.Code.NOT_FOUND, false);
         User userToDelete = foundUser.get();
+        if (userToDelete.isAdmin())
+            return new Response<>(Response.Code.FORBIDDEN, false);
         userRepository.delete(userToDelete);
-        return true;
+        return new Response<>(Response.Code.OK, true);
     }
 
     /**

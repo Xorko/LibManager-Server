@@ -180,9 +180,7 @@ public class UserController {
     ) {
         if (TokenUtil.isValid(token)) {
             if (TokenUtil.isAdmin(token)) {
-                if (userService.delete(username))
-                    return new Response<>(Response.Code.OK, true);
-                return new Response<>(Response.Code.NOT_FOUND, false);
+                return userService.delete(username);
             }
             return new Response<>(Response.Code.INSUFFICIENT_PERMISSIONS, false);
         }

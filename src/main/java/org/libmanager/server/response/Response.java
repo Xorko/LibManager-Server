@@ -14,7 +14,8 @@ public class Response<T> {
         MAX_ITEMS_REACHED,
         MAX_USERS_REACHED,
         MAX_RESERVATIONS_REACHED,
-        INTEGRITY_VIOLATION
+        INTEGRITY_VIOLATION,
+        FORBIDDEN
     }
 
     private Code code;

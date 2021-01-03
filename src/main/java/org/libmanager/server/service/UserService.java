@@ -84,7 +84,7 @@ public interface UserService {
      * @param username  The username of the user to delete
      * @return          True if the user was added, false otherwise
      */
-    boolean delete(String username);
+    Response<Boolean> delete(String username);
 
     /**
      * Check if a username is unique

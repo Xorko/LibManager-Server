@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.libmanager.server.entity.User;
 import org.libmanager.server.repository.UserRepository;
+import org.libmanager.server.response.Response;
 import org.libmanager.server.service.impl.UserServiceImpl;
 import org.libmanager.server.specification.UserSpecification;
 import org.mockito.InjectMocks;
@@ -20,6 +21,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -199,23 +202,35 @@ public class UserServiceTest {
     class Delete {
 
         @Test
-        @DisplayName("Returns true if user is found and edited")
-        public void delete_shouldReturnTrue_whenUserIsDeleted() {
+        @DisplayName("Returns OK if user is found and deleted")
+        public void delete_shouldReturnOK_whenUserIsDeleted() {
             when(userRepository.findById("Foo")).thenReturn(Optional.of(user));
 
-            boolean result = userService.delete(user.getUsername());
+            Response<Boolean> result = userService.delete(user.getUsername());
 
-            assertThat(result).isTrue();
+            assertThat(result.getCode()).isEqualTo(Response.Code.OK);
         }
 
         @Test
-        @DisplayName("Returns false if user is not found")
+        @DisplayName("Returns FORBIDDEN if user is found and is admin and not deleted")
+        public void delete_shouldReturnForbidden_whenUserIsAdmin() {
+            User userSpy = spy(user);
+            when(userRepository.findById("Foo")).thenReturn(Optional.of(userSpy));
+            doReturn(true).when(userSpy).isAdmin();
+
+            Response<Boolean> result = userService.delete(userSpy.getUsername());
+
+            assertThat(result.getCode()).isEqualTo(Response.Code.FORBIDDEN);
+        }
+
+        @Test
+        @DisplayName("Returns NOT_FOUND if user is not deleted")
         public void delete_shouldReturnFalse_whenUserIsNotFound() {
             when(userRepository.findById("Foo")).thenReturn(Optional.empty());
 
-            boolean result = userService.delete(user.getUsername());
+            Response<Boolean> result = userService.delete(user.getUsername());
 
-            assertThat(result).isFalse();
+            assertThat(result.getCode()).isEqualTo(Response.Code.NOT_FOUND);
         }
 
     }

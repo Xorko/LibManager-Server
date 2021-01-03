@@ -241,15 +241,15 @@ public class UserControllerTest {
         private final String uri = "/user/delete/{username}";
 
         @Test
-        @DisplayName("Returns OK if params are correct and token is valid and is admin")
-        public void deleteUser_shouldReturnOk_whenCorrectParamsAndTokenIsValidAndIsAdmin() throws Exception {
+        @DisplayName("Returns OK if params are correct and token is valid and is admin and not forbidden")
+        public void deleteUser_shouldReturnOk_whenCorrectParamsAndTokenIsValidAndIsAdminAndNotForbidden() throws Exception {
             try (MockedStatic<TokenUtil> mockedTokenUtil = mockStatic(TokenUtil.class)) {
                 mockedTokenUtil.when(() -> TokenUtil.isValid("Foo"))
                                .thenReturn(true);
                 mockedTokenUtil.when(() -> TokenUtil.isAdmin("Foo"))
                                .thenReturn(true);
 
-                when(userService.delete("Foo")).thenReturn(true);
+                when(userService.delete("Foo")).thenReturn(new Response<>(Response.Code.OK, true));
 
                 mockMvc.perform(post(uri, "Foo")
                         .param("token", "Foo"))
@@ -267,12 +267,29 @@ public class UserControllerTest {
                 mockedTokenUtil.when(() -> TokenUtil.isAdmin("Foo"))
                                .thenReturn(true);
 
-                when(userService.delete("Foo")).thenReturn(false);
+                when(userService.delete("Foo")).thenReturn(new Response<>(Response.Code.NOT_FOUND, false));
 
                 mockMvc.perform(post(uri, "Foo")
                         .param("token", "Foo"))
                        .andExpect(status().isOk())
                        .andExpect(jsonPath("$.code").value(Response.Code.NOT_FOUND.toString()));
+            }
+        }
+        @Test
+        @DisplayName("Returns FORBIDDEN if user to delete is admin")
+        public void deleteUser_shouldReturnForbidden_whenUserToDeleteIsAdmin() throws Exception {
+            try (MockedStatic<TokenUtil> mockedTokenUtil = mockStatic(TokenUtil.class)) {
+                mockedTokenUtil.when(() -> TokenUtil.isValid("Foo"))
+                               .thenReturn(true);
+                mockedTokenUtil.when(() -> TokenUtil.isAdmin("Foo"))
+                               .thenReturn(true);
+
+                when(userService.delete("Foo")).thenReturn(new Response<>(Response.Code.FORBIDDEN, false));
+
+                mockMvc.perform(post(uri, "Foo")
+                        .param("token", "Foo"))
+                       .andExpect(status().isOk())
+                       .andExpect(jsonPath("$.code").value(Response.Code.FORBIDDEN.toString()));
             }
         }
 
