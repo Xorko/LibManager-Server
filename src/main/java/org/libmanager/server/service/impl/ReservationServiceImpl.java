@@ -118,7 +118,7 @@ public class ReservationServiceImpl implements ReservationService {
         filter.setId(id);
         filter.setItem(item);
         filter.setUser(user);
-        filter.setReservationDate(LocalDate.now());
+        filter.setReservationDate(DateUtil.parseDB(reservationDate));
 
         Specification<Reservation> spec = new ReservationSpecification(filter, type);
 
