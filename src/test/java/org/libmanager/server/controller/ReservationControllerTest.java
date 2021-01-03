@@ -512,7 +512,7 @@ public class ReservationControllerTest {
                 mockedTokenUtil.when(() -> TokenUtil.isAdmin("Foo"))
                                .thenReturn(true);
 
-                when(reservationService.search(1, "null", "null", "null"))
+                when(reservationService.search(1, "null", "null", "null", "null"))
                         .thenReturn(reservationIterable);
 
                 mockMvc.perform(post(uri)
@@ -531,7 +531,7 @@ public class ReservationControllerTest {
                 mockedTokenUtil.when(() -> TokenUtil.isAdmin("Foo"))
                                .thenReturn(true);
 
-                when(reservationService.search(1, "null", "null", "null"))
+                when(reservationService.search(1, "null", "null", "null", "null"))
                         .thenReturn(reservationIterable);
 
                 mockMvc.perform(post(uri)

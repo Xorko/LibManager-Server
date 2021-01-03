@@ -1,6 +1,7 @@
 package org.libmanager.server.entity;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -15,6 +16,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import org.springframework.data.annotation.CreatedDate;
 
 @Entity
 public class Reservation implements Serializable {
@@ -36,6 +38,9 @@ public class Reservation implements Serializable {
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "title")
     @JsonIdentityReference(alwaysAsId = true)
     private Item item;
+
+    @CreatedDate
+    private LocalDate reservationDate = LocalDate.now();
 
     @Transient
     private String itemType;
@@ -68,4 +73,11 @@ public class Reservation implements Serializable {
         return item.getItemType();
     }
 
+    public LocalDate getReservationDate() {
+        return reservationDate;
+    }
+
+    public void setReservationDate(LocalDate reservationDate) {
+        this.reservationDate = reservationDate;
+    }
 }

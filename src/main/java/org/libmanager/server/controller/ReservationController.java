@@ -3,6 +3,7 @@ package org.libmanager.server.controller;
 import org.libmanager.server.entity.Reservation;
 import org.libmanager.server.response.Response;
 import org.libmanager.server.service.ReservationService;
+import org.libmanager.server.util.DateUtil;
 import org.libmanager.server.util.TokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -118,16 +119,17 @@ public class ReservationController {
             @RequestParam(defaultValue = "0") long id,
             @RequestParam(defaultValue = "null") String username,
             @RequestParam(defaultValue = "null") String title,
-            @RequestParam(defaultValue = "null") String itemType
+            @RequestParam(defaultValue = "null") String itemType,
+            @RequestParam(defaultValue = "null") String reservationDate
     ) {
         if (TokenUtil.isValid(token)) {
             if (TokenUtil.isAdmin(token)) {
                 Iterable<Reservation> reservationIterable;
                 // If no argument is given, return all reservations
-                if (id == 0 && username.equals("null") && title.equals("null") && itemType.equals("null"))
+                if (id == 0 && username.equals("null") && title.equals("null") && itemType.equals("null") && reservationDate.equals("null"))
                     reservationIterable = reservationService.getAll();
                 else
-                    reservationIterable = reservationService.search(id, username, title, itemType);
+                    reservationIterable = reservationService.search(id, username, title, itemType, reservationDate);
                 return new Response<>(Response.Code.OK, reservationIterable);
             }
             return new Response<>(Response.Code.INSUFFICIENT_PERMISSIONS, null);

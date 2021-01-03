@@ -22,6 +22,7 @@ import org.libmanager.server.repository.UserRepository;
 import org.libmanager.server.response.Response;
 import org.libmanager.server.service.impl.ReservationServiceImpl;
 import org.libmanager.server.specification.ReservationSpecification;
+import org.libmanager.server.util.DateUtil;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -79,6 +80,7 @@ public class ReservationServiceTest {
         reservation.setId(1);
         reservation.setUser(user);
         reservation.setItem(book);
+        reservation.setReservationDate(LocalDate.now());
 
         reservationList = Arrays.asList(reservation, reservation, reservation);
     }
@@ -312,7 +314,8 @@ public class ReservationServiceTest {
                     reservation.getId(),
                     reservation.getUser().getUsername(),
                     reservation.getItem().getTitle(),
-                    reservation.getItemType()
+                    reservation.getItemType(),
+                    DateUtil.formatDB(reservation.getReservationDate())
             );
 
             assertThat(result).isEqualTo(reservationList);

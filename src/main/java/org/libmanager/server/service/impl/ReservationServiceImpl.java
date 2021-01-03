@@ -14,6 +14,7 @@ import org.libmanager.server.repository.UserRepository;
 import org.libmanager.server.response.Response;
 import org.libmanager.server.service.ReservationService;
 import org.libmanager.server.specification.ReservationSpecification;
+import org.libmanager.server.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -106,7 +107,7 @@ public class ReservationServiceImpl implements ReservationService {
     /**
      * {@inheritDoc}
      */
-    public Iterable<Reservation> search(long id, String username, String title, String type) {
+    public Iterable<Reservation> search(long id, String username, String title, String type, String reservationDate) {
         User user = new User();
         user.setUsername('%' + username + '%');
 
@@ -117,6 +118,7 @@ public class ReservationServiceImpl implements ReservationService {
         filter.setId(id);
         filter.setItem(item);
         filter.setUser(user);
+        filter.setReservationDate(LocalDate.now());
 
         Specification<Reservation> spec = new ReservationSpecification(filter, type);
 
