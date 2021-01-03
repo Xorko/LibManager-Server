@@ -120,6 +120,11 @@ public abstract class Item implements Serializable {
         this.totalCopies = totalCopies;
     }
 
+    // Only for testing
+    public void setItemType() {
+        this.itemType = this.getClass().getAnnotation(DiscriminatorValue.class).value();
+    }
+
     public String getItemType() {
         return itemType;
     }
