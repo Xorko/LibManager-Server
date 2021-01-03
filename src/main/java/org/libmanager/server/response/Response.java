@@ -13,7 +13,8 @@ public class Response<T> {
         INVALID_TOTAL_COPIES,
         MAX_ITEMS_REACHED,
         MAX_USERS_REACHED,
-        MAX_RESERVATIONS_REACHED
+        MAX_RESERVATIONS_REACHED,
+        INTEGRITY_VIOLATION
     }
 
     private Code code;
