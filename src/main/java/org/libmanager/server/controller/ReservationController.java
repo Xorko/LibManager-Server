@@ -124,12 +124,7 @@ public class ReservationController {
     ) {
         if (TokenUtil.isValid(token)) {
             if (TokenUtil.isAdmin(token)) {
-                Iterable<Reservation> reservationIterable;
-                // If no argument is given, return all reservations
-                if (id == 0 && username.equals("null") && title.equals("null") && itemType.equals("null") && reservationDate.equals("null"))
-                    reservationIterable = reservationService.getAll();
-                else
-                    reservationIterable = reservationService.search(id, username, title, itemType, reservationDate);
+                Iterable<Reservation> reservationIterable = reservationService.search(id, username, title, itemType, reservationDate);
                 return new Response<>(Response.Code.OK, reservationIterable);
             }
             return new Response<>(Response.Code.INSUFFICIENT_PERMISSIONS, null);

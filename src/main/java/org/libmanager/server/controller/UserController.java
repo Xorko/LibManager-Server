@@ -152,13 +152,7 @@ public class UserController {
     ) {
         if (TokenUtil.isValid(token)) {
             if (TokenUtil.isAdmin(token)) {
-                Iterable<User> users;
-                // If no argument is given, return all users
-                if (username.equals("null") && firstName.equals("null") && lastName.equals("null") && address.equals("null") &&
-                        email.equals("null") && birthday.equals("null") && registrationDate.equals("null"))
-                    users = userService.getAll();
-                else
-                    users = userService.search(username, firstName, lastName, address, email, birthday, registrationDate);
+                Iterable<User> users = userService.search(username, firstName, lastName, address, email, birthday, registrationDate);
                 return new Response<>(Response.Code.OK, users);
             }
             return new Response<>(Response.Code.INSUFFICIENT_PERMISSIONS, null);

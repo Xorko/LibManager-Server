@@ -124,11 +124,7 @@ public class DVDController {
             @RequestParam(defaultValue = "null") String releaseDate,
             @RequestParam(defaultValue = "null") String status
     ) {
-        Iterable<DVD> dvdIterable;
-        if (title.equals("null") && author.equals("null") && genre.equals("null") && releaseDate.equals("null") && status.equals("null"))
-            dvdIterable = dvdService.getAll();
-        else
-            dvdIterable = dvdService.search(title, author, genre, releaseDate, status);
+        Iterable<DVD> dvdIterable = dvdService.search(title, author, genre, releaseDate, status);
         return new Response<>(Response.Code.OK, dvdIterable);
     }
 

@@ -133,13 +133,7 @@ public class BookController {
             @RequestParam(defaultValue = "null") String releaseDate,
             @RequestParam(defaultValue = "null") String status
     ) {
-        // If no argument is given, return all books
-        Iterable<Book> bookIterable;
-        if (title.equals("null") && author.equals("null") && publisher.equals("null") && genre.equals("null") &&
-                isbn.equals("null") && releaseDate.equals("null") && status.equals("null"))
-            bookIterable = bookService.getAll();
-        else
-            bookIterable = bookService.search(title, author, publisher, genre, isbn, releaseDate, status);
+        Iterable<Book> bookIterable = bookService.search(title, author, publisher, genre, isbn, releaseDate, status);
         return new Response<>(Response.Code.OK, bookIterable);
     }
 
