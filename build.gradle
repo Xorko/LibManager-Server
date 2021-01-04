@@ -1,6 +1,7 @@
 plugins {
     id 'org.springframework.boot' version '2.4.1'
     id 'io.spring.dependency-management' version '1.0.10.RELEASE'
+    id 'com.adarshr.test-logger' version '2.1.1'
     id 'java'
 }
 
@@ -36,9 +37,11 @@ dependencies {
 
 test {
     useJUnitPlatform()
-    afterTest { desc, result ->
-        logger.quiet "Executing test ${desc.name} [${desc.className}] with result: ${result.resultType}"
-    }
+}
+
+testlogger {
+    theme 'mocha' // project level
+    slowThreshold 5000
 }
 
 compileJava.inputs.files(processResources)
