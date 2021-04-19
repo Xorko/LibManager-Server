@@ -19,3 +19,5 @@ Please consider changing the password asap
 * Windows: `gradlew.bat bootRun`
 * Linux/macOS: `./gradlew bootRun`
 
+### To do
+* Use correct HTTP methods and status code
